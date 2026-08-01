@@ -3,7 +3,7 @@
 > **Warp Aiy & the team to any platform, any machine.**
 > The portable "machine" of the Aiy Ecosystem — 18 agent identities, 5 skills, and the templates/playbooks that make the soul travel.
 
-The soul lives in markdown. So it can live **anywhere**.
+The soul lives in markdown. So it can live **anywhere**. The `aiy warp` CLI ships them.
 
 ---
 
@@ -15,7 +15,7 @@ The soul lives in markdown. So it can live **anywhere**.
 | `skills/` | 5 operational skills (affiliate-poster, aiy-messaging, obsidian, teach-protocol, trading-pipeline) | Reusable workflows with triggers |
 | `templates/` | Obsidian workspace templates (Daily Log, Knowledge, Reflection) | The memory format |
 | `playbooks/` | Team Charter, Architecture Decisions, Knowledge INDEX | The shared rules of engagement |
-| `install/` | The `aiy warp` CLI (Go binary) — install/export/doctor/list + P1: `export chatgpt\|gemini\|web`, `migrate`, `init-workspace` | See `install/README.md` |
+| `install/` | The `aiy warp` CLI (Go binary) — install / export / doctor / list / migrate / init-workspace | See `install/README.md` |
 | `export/examples/` | Real exported personas (proof of concept) | e.g. Kwan-team conductor, Aiy personal copy |
 | `scaffold/` | PARA workspace template for filesystem root (00-Inbox … 05-Other) | "Home system" of a fresh machine |
 | `docs/WARP.md` | The multi-platform architecture & vision | Start here |
@@ -26,27 +26,51 @@ The soul lives in markdown. So it can live **anywhere**.
 # 1. Clone the kit
 git clone https://github.com/anco1031-sudo/aiy-warp.git ~/aiy-warp
 
-# 2. Install agent identities
-cp ~/aiy-warp/agents/*.md ~/.config/opencode/agents/
+# 2. Build the CLI (requires Go 1.22+)
+cd ~/aiy-warp/install && go build -o aiy-warp ./cmd/aiy-warp
 
-# 3. Install skills
-cp -r ~/aiy-warp/skills/* ~/.config/opencode/skills/
-
-# 4. (Optional) workspace templates
-cp ~/aiy-warp/templates/* ~/myObsidian/Aiy_Workspace/Meta/
+# 3. Install agent identities + skills onto opencode
+./aiy-warp install opencode -y
 ```
 
-Done. Aiy & the 17 others are alive on the new machine.
+Done. Aiy & the 17 others are alive on the new machine. Verify with `./aiy-warp doctor` — every identity should pass.
+
+> 💡 **Prefer no build?** Copy `agents/*.md` to `~/.config/opencode/agents/` and `skills/*` to `~/.config/opencode/skills/` manually. The CLI just automates exactly this.
 
 ## 🧭 Warping to other platforms
 
-The same `agents/*.md` identities can be adapted for **ChatGPT, Gemini, Claude, or any web chat** — the core persona + behavioral directives are platform-agnostic prose. See [docs/WARP.md](docs/WARP.md) for the full matrix and the future `aiy warp` CLI.
+The same identities adapt to **ChatGPT, Gemini, or any web chat** — the core persona + behavioral directives are platform-agnostic prose.
+
+```bash
+# Export one persona for web chat (e.g. Aiy's personal copy)
+./aiy-warp export web --agent aiy
+
+# Export a whole department as ONE conductor prompt (team collapses into a single voice)
+./aiy-warp export chatgpt --team kwan
+
+# Export to a file instead of stdout
+./aiy-warp export gemini --team lin --out lin-team.md
+```
+
+**How it works:** web platforms (chatgpt/gemini/web) *condense* each agent (no sub-agent tools there) and *collapse* teams into a conductor that internally role-plays each specialist, then synthesizes one answer.
+
+## 🛠 Other commands
+
+```bash
+./aiy-warp list                  # what's in the kit
+./aiy-warp doctor                # verify installed identities (exit 0 = all good)
+./aiy-warp init-workspace        # scaffold a fresh PARA workspace
+./aiy-warp migrate               # stamp canonical frontmatter onto agents/ (creates .bak, idempotent)
+```
+
+Exit codes: `0` success · `1` runtime · `2` usage · `3` drift · `4` no-op · `5` secret detected. Full spec: `install/CLI_SPEC.md`.
 
 ## 🔒 Privacy & identifiers
 
 - This repo is the **public "machine"** (body) — identity, skills, rules.
 - The **private "soul"** (memory: logs, personal knowledge) lives in a separate private repo / vault.
-- Some skills contain **real public identifiers** (e.g. Discord channel ID, Facebook Page ID) used by Louis's own channels. These are not secrets, but if you fork this repo, replace them with your own.
+- The CLI has a **redaction gate**: exporting with real identifiers that aren't allow-listed exits `5` (secret detected). Use `--allow-identifiers <id,id>` only when you explicitly trust the target.
+- The repo ships **fake placeholder IDs** in docs/tests — if you fork it, swap in your own.
 
 ## 🏗 Architecture
 
