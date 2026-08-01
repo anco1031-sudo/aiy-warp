@@ -1,6 +1,5 @@
 ---
 template: project
-created: YYYY-MM-DD
 ---
 
 # 🚀 {Project Name}
