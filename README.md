@@ -1,7 +1,7 @@
 # 🌀 Aiy Warp Kit
 
 > **Warp Aiy & the team to any platform, any machine.**
-> The portable "machine" of the Aiy Ecosystem — 18 agent identities, 5 skills, and the templates/playbooks that make the soul travel.
+> The portable "machine" of the Aiy Ecosystem — 18 agent identities, 6 skills, and the templates/playbooks that make the soul travel.
 
 The soul lives in markdown. So it can live **anywhere**. The `aiy warp` CLI ships them.
 
@@ -12,7 +12,7 @@ The soul lives in markdown. So it can live **anywhere**. The `aiy warp` CLI ship
 | Path | Contents | Notes |
 |---|---|---|
 | `agents/` | 18 agent identity files (`aiy`, `lin`, `kwan`, `cher`, …) | One markdown file per soul — model-agnostic |
-| `skills/` | 5 operational skills (affiliate-poster, aiy-messaging, obsidian, teach-protocol, trading-pipeline) | Reusable workflows with triggers |
+| `skills/` | 6 operational skills (affiliate-poster, aiy-messaging, handoff-protocol, obsidian, teach-protocol, trading-pipeline) | Reusable workflows with triggers |
 | `templates/` | Obsidian workspace templates (Daily Log, Knowledge, Reflection) | The memory format |
 | `playbooks/` | Team Charter, Architecture Decisions, Knowledge INDEX | The shared rules of engagement |
 | `install/` | The `aiy warp` CLI (Go binary) — install / export / doctor / list / migrate / init-workspace | See `install/README.md` |
