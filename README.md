@@ -22,12 +22,21 @@ The soul lives in markdown. So it can live **anywhere**. The `aiy warp` CLI ship
 
 ## 🚀 Quick start (opencode, today)
 
+### Requirements
+
+| Requirement | Version | หมายเหตุ |
+|---|---|---|
+| **Go** | **1.26+** | `go 1.26` ใน `install/src/go.mod` — build ด้วย toolchain ที่ใหม่กว่าก็ได้ |
+| **OS** | Linux / macOS | cross-platform path handling (hostPath, filepath.Join) — ไม่มี Windows-specific guard แต่ใช้ Go stdlib |
+| **Disk** | ~50 MB | binary + kit ตัวเล็กมาก |
+| **Config** | — | ใช้ `~/.config/aiy-warp/warp.config` (host-local) — **ห้าม commit ตัวจริง** |
+
 ```bash
 # 1. Clone the kit
 git clone https://github.com/anco1031-sudo/aiy-warp.git ~/aiy-warp
 
-# 2. Build the CLI (requires Go 1.22+)
-cd ~/aiy-warp/install && go build -o aiy-warp ./cmd/aiy-warp
+# 2. Build the CLI (requires Go 1.26+)
+cd ~/aiy-warp/install/src && go build -o aiy-warp .
 
 # 3. Install agent identities + skills onto opencode
 ./aiy-warp install opencode -y
@@ -36,6 +45,24 @@ cd ~/aiy-warp/install && go build -o aiy-warp ./cmd/aiy-warp
 Done. Aiy & the 17 others are alive on the new machine. Verify with `./aiy-warp doctor` — every identity should pass.
 
 > 💡 **Prefer no build?** Copy `agents/*.md` to `~/.config/opencode/agents/` and `skills/*` to `~/.config/opencode/skills/` manually. The CLI just automates exactly this.
+
+## 🤖 Telling an agent to use the CLI
+
+This kit is a **tool for agents, not just humans** — Aiy & the team can operate `aiy warp` themselves. Give the agent a **goal**, not a command:
+
+| คุณต้องการ | บอก agent แบบนี้ | agent จะรัน |
+|---|---|---|
+| ย้ายทีมไปเครื่องใหม่ | "install kit ลง opencode บนเครื่องนี้" | `aiy warp install opencode -y` |
+| เอา persona ไปใช้ใน web chat | "export persona ของ Kwan เป็น conductor" | `aiy warp export chatgpt --team kwan` |
+| ตรวจว่าติดตั้งครบไหม | "เช็ค doctor หน่อย" | `aiy warp doctor` |
+| สร้าง workspace ใหม่ | "init-workspace สำหรับเครื่องนี้" | `aiy warp init-workspace --dry-run` (ลองก่อน) |
+| อัปเดต frontmatter agents | "migrate identities" | `aiy warp migrate --dry-run` (ลองก่อน) |
+
+**Rules for agents:**
+- **Never touch the real `~/.config/`** during testing — always test in a sandbox `HOME` (e.g. `HOME=/tmp/...`), then run the real install only when Louis approves.
+- **Never run destructive ops directly** — `migrate`/`init-workspace` first with `--dry-run`, show the diff, then execute.
+- **Respect the redaction gate** — if export exits `5` (secret detected), don't bypass with `--allow-identifiers` unless Louis explicitly authorizes it.
+- **Read `install/CLI_SPEC.md`** for exact flags, exit codes, and platform behavior before improvising.
 
 ## 🧭 Warping to other platforms
 
