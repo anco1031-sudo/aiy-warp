@@ -17,6 +17,7 @@ The soul lives in markdown. So it can live **anywhere**.
 | `playbooks/` | Team Charter, Architecture Decisions, Knowledge INDEX | The shared rules of engagement |
 | `install/` | Future CLI installer spec + cross-platform warp tooling | See `install/README.md` |
 | `export/examples/` | Real exported personas (proof of concept) | e.g. Kwan-team conductor, Aiy personal copy |
+| `scaffold/` | PARA workspace template for filesystem root (00-Inbox … 05-Other) | "Home system" of a fresh machine |
 | `docs/WARP.md` | The multi-platform architecture & vision | Start here |
 
 ## 🚀 Quick start (opencode, today)
