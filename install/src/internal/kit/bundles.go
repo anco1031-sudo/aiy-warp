@@ -82,6 +82,19 @@ func (b *Bundles) SkillOwnedBy(agent string) []string {
 	return out
 }
 
+// ResolveTeam maps a team selector to a department: an existing department
+// name passes through; a department-head agent name (e.g. "kwan") resolves to
+// its department; anything else is returned unchanged (caller reports unknown).
+func (b *Bundles) ResolveTeam(name string) string {
+	if b.HasDept(name) {
+		return name
+	}
+	if a := b.Find(name); a != nil && a.Rank == "head" {
+		return a.Department
+	}
+	return name
+}
+
 // HasDept reports whether dept is a declared department.
 func (b *Bundles) HasDept(dept string) bool {
 	for _, d := range b.Departments {

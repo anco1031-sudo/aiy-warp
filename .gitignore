@@ -21,3 +21,6 @@ __pycache__/
 warp.lock
 warp.config
 *.local.yaml
+
+# aiy warp — migrate originals (DESIGN-NOTE-P1 §5: agents/*.md.bak)
+*.bak

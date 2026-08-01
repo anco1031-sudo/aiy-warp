@@ -89,8 +89,9 @@ var (
 	// Warn: prose references to credential concepts.
 	refRE = regexp.MustCompile(`(?i)\b(api[_-]?key|apikey|client[_-]?secret|password|(?:bot|api|access|auth|page|user|discord|telegram|facebook)[- ]?token)\b`)
 
-	// Warn: absolute host paths leaking into the kit.
-	hostPathRE = regexp.MustCompile(`\b/home/[A-Za-z0-9_./-]+`)
+	// Warn: host paths leaking into the kit — cross-platform (F10: ~/, /Users/,
+	// C:\, /home/).
+	hostPathRE = regexp.MustCompile(`(?:/home/[A-Za-z0-9_./-]+|~/[A-Za-z0-9_./-]+|/Users/[A-Za-z0-9_./-]+|[A-Za-z]:\\[^\s]+)`)
 )
 
 // placeholderValues are documentation placeholders that must never hard-block.
@@ -210,9 +211,11 @@ func Scan(files map[string]string, allow map[string]bool) Report {
 	return rep
 }
 
+// clip truncates s to 40 runes, never splitting a multibyte character (F11).
 func clip(s string) string {
-	if len(s) > 40 {
-		return s[:40] + "…"
+	r := []rune(s)
+	if len(r) > 40 {
+		return string(r[:40]) + "…"
 	}
 	return s
 }

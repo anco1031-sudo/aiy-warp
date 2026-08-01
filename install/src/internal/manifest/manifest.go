@@ -36,7 +36,8 @@ func Load(path string) (*Lock, error) {
 	return &l, nil
 }
 
-// Save writes the lock atomically (tmp + rename).
+// Save writes the lock atomically (tmp + rename). The tmp file is fsynced
+// before rename so a crash can never leave an empty/partial lock (F11).
 func Save(path string, l *Lock) error {
 	if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
 		return err
@@ -47,6 +48,17 @@ func Save(path string, l *Lock) error {
 	}
 	tmp := path + ".tmp"
 	if err := os.WriteFile(tmp, b, 0o644); err != nil {
+		return err
+	}
+	f, err := os.Open(tmp)
+	if err != nil {
+		return err
+	}
+	if err := f.Sync(); err != nil {
+		f.Close()
+		return err
+	}
+	if err := f.Close(); err != nil {
 		return err
 	}
 	return os.Rename(tmp, path)

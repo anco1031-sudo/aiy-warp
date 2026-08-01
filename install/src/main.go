@@ -1,4 +1,5 @@
-// Command `aiy warp` — warp the 18-agent kit to a host (P0: opencode).
+// Command `aiy warp` — warp the 18-agent kit to a host (P1: opencode +
+// chatgpt/gemini/web export, init-workspace, migrate).
 //
 // Exit codes (CLI_SPEC.md §1.3): 0 success · 1 runtime · 2 usage · 3 drift ·
 // 4 no-op · 5 secret detected.
@@ -14,7 +15,7 @@ import (
 	"github.com/anco1031-sudo/aiy-warp/install/src/internal/ui"
 )
 
-const version = "0.1.0-p0"
+const version = "0.2.0-p1"
 
 func main() { os.Exit(run(os.Args[1:])) }
 
@@ -43,6 +44,10 @@ func run(argv []string) int {
 		return cmdDoctor(u, rest)
 	case "list":
 		return cmdList(u, rest)
+	case "init-workspace":
+		return cmdInit(u, rest)
+	case "migrate":
+		return cmdMigrate(u, rest)
 	case "help", "--help", "-h":
 		usage(u.Out)
 		return errs.CodeOK
@@ -86,7 +91,7 @@ func pick(s, def string) string {
 }
 
 func usage(w io.Writer) {
-	fmt.Fprintln(w, `aiy warp — warp the 18-agent kit to a host (P0: opencode)
+	fmt.Fprintln(w, `aiy warp — warp the 18-agent kit to a host (P1: opencode + web-chat export)
 
 Usage:
   aiy warp install <platform> [--agent <name>|--team <dept>] [--force] [--dry-run] [-y]
@@ -94,9 +99,12 @@ Usage:
                    [--allow-identifiers <id,id>] [--collapse|--no-collapse]
   aiy warp doctor  [--platform <p>] [--json]
   aiy warp list    [--platform <p>]
+  aiy warp init-workspace [--home <dir>] [--dry-run]
+  aiy warp migrate [--dry-run] [--no-backup] [--agents-dir <path>]
   aiy warp --version
 
+Platforms: opencode · chatgpt · gemini · web (web platforms condense; teams collapse)
 Global flags: --config <path> · --verbose
 Exit codes: 0 success · 1 runtime · 2 usage · 3 drift · 4 no-op · 5 secret detected
-Spec: install/CLI_SPEC.md · Design: install/DESIGN-NOTE.md`)
+Spec: install/CLI_SPEC.md · Design: install/DESIGN-NOTE.md, DESIGN-NOTE-P1.md`)
 }

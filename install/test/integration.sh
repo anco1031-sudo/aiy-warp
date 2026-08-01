@@ -95,21 +95,23 @@ rm -rf "$KIT_SANDBOX" && cp -r "$REPO_ROOT" "$KIT_SANDBOX" && rm -rf "$KIT_SANDB
 printf -- "---\ndescription: \"EVIL (อีวิล) — test\"\nmode: subagent\nmodel: opencode/x\ntoken: sk-test-abcdefghijklmnopqrstuvwxyz123456\n---\nbody\n" > "$KIT_SANDBOX/agents/evil.md"
 (cd "$KIT_SANDBOX" && expect_exit "install with planted secret" 5 env HOME="$SANDBOX_HOME" "$BIN" install opencode -y)
 (cd "$KIT_SANDBOX" && expect_exit "export with planted secret" 5 env HOME="$SANDBOX_HOME" "$BIN" export opencode --out "$OUT-evil")
-# export gate on identifiers: real kit has Discord snowflake + Telegram chat ID → export blocked without allow-identifiers
-(cd "$REPO_ROOT" && expect_exit "export opencode (identifiers block)" 5 env HOME="$SANDBOX_HOME" "$BIN" export opencode --out "$OUT")
+# P1: parameterization removed kit identifiers → plant one to re-test the export gate
+rm -f "$KIT_SANDBOX/agents/evil.md"
+printf -- "---\ndescription: \"EVIL2 (อีวิล) — test\"\nmode: subagent\nmodel: opencode/x\ndiscord: 1234567890123456\n---\nbody\n" > "$KIT_SANDBOX/agents/evil2.md"
+(cd "$KIT_SANDBOX" && expect_exit "export blocks non-allowlisted identifier" 5 env HOME="$SANDBOX_HOME" "$BIN" export opencode --out "$OUT-ids")
+# regression: the parameterized kit must now export clean with NO allowlist
+(cd "$REPO_ROOT" && expect_exit "export opencode (parameterized kit, clean)" 0 env HOME="$SANDBOX_HOME" "$BIN" export opencode --out "$OUT")
 
-echo "── 8. Export flat set + --allow-identifiers ──"
-# F3 (redaction gate): Telegram IDs (852106923) are export-gated like Discord
-# snowflakes — the allowlist must declare all public IDs in the kit.
-ALLOW_IDS="1527698229347487904,1210049942192010,852106923"
-(cd "$REPO_ROOT" && expect_exit "export with --allow-identifiers" 0 env HOME="$SANDBOX_HOME" "$BIN" export opencode --out "$OUT" --allow-identifiers "$ALLOW_IDS")
+echo "── 8. Export flat set + --allow-identifiers (planted) ──"
+# F3 (redaction gate): a planted Discord snowflake blocks export unless allowlisted.
+(cd "$KIT_SANDBOX" && expect_exit "export with --allow-identifiers" 0 env HOME="$SANDBOX_HOME" "$BIN" export opencode --out "$OUT-ids" --allow-identifiers "1234567890123456")
 [ -f "$OUT/agents/aiy.md" ] && pass "export flat agents/aiy.md" || fail "export missing agents/aiy.md"
 [ -f "$OUT/skills/aiy-messaging/SKILL.md" ] && pass "export flat skill" || fail "export missing skill"
-STDOUT=$(env HOME="$SANDBOX_HOME" "$BIN" export opencode --stdout --allow-identifiers "$ALLOW_IDS" 2>/dev/null | head -3)
+STDOUT=$(env HOME="$SANDBOX_HOME" "$BIN" export opencode --stdout 2>/dev/null | head -3)
 if echo "$STDOUT" | grep -q "#### agents/"; then pass "export --stdout works"; else fail "export --stdout broken: $STDOUT"; fi
 
 echo "── 9. Export with --agent selector ──"
-(cd "$REPO_ROOT" && expect_exit "export --agent aiy" 0 env HOME="$SANDBOX_HOME" "$BIN" export opencode --agent aiy --out "$OUT-aiy" --allow-identifiers "$ALLOW_IDS")
+(cd "$REPO_ROOT" && expect_exit "export --agent aiy" 0 env HOME="$SANDBOX_HOME" "$BIN" export opencode --agent aiy --out "$OUT-aiy")
 [ -f "$OUT-aiy/agents/aiy.md" ] && pass "agent bundle has aiy.md" || fail "agent bundle missing aiy.md"
 [ -f "$OUT-aiy/skills/obsidian/SKILL.md" ] && pass "agent bundle includes owned skills" || fail "agent bundle missing owned skill"
 
@@ -132,6 +134,66 @@ if echo "$JSON" | python3 -m json.tool >/dev/null 2>&1; then pass "doctor --json
 echo "── 12. doctor before any install (not installed) ──"
 rm -rf "$SANDBOX_HOME/.config"
 expect_exit "doctor on bare machine" 3 env HOME="$SANDBOX_HOME" "$BIN" doctor opencode
+
+echo "── 13. P1: web-chat export (chatgpt/gemini/web, single agent) ──"
+for plat in chatgpt gemini web; do
+  (cd "$REPO_ROOT" && expect_exit "export $plat --agent aiy" 0 env HOME="$SANDBOX_HOME" "$BIN" export "$plat" --agent aiy --out "$OUT-$plat")
+  [ -f "$OUT-$plat/aiy.md" ] && pass "$plat single aiy.md" || fail "$plat missing aiy.md"
+done
+grep -q "# 🌀 AIY (อัย)" "$OUT-chatgpt/aiy.md" && pass "chatgpt single header" || fail "chatgpt header wrong"
+grep -q "personal copy" "$OUT-chatgpt/aiy.md" && pass "chatgpt personal-copy marker" || fail "chatgpt personal-copy marker missing"
+CHAT_WORDS=$(wc -w < "$OUT-chatgpt/aiy.md")
+[ "$CHAT_WORDS" -le 1500 ] && pass "chatgpt word cap ($CHAT_WORDS ≤ 1500)" || fail "chatgpt words = $CHAT_WORDS"
+grep -q "PASTE THIS PROMPT" "$OUT-web/aiy.md" && pass "web pasteable prompt marker" || fail "web prompt marker missing"
+
+echo "── 14. P1: team collapse conductor ──"
+(cd "$REPO_ROOT" && expect_exit "export chatgpt --team kwan" 0 env HOME="$SANDBOX_HOME" "$BIN" export chatgpt --team kwan --out "$OUT-kwan")
+[ -f "$OUT-kwan/trading-conductor.md" ] && pass "kwan conductor file" || fail "trading-conductor.md missing"
+COND="$OUT-kwan/trading-conductor.md"
+grep -q "collapsed from 5 agents" "$COND" && pass "conductor collapse count" || fail "conductor count wrong"
+grep -q "## Routing table" "$COND" && pass "conductor routing table" || fail "routing table missing"
+grep -q "→ Fon" "$COND" && pass "conductor routing rows" || fail "routing rows missing"
+grep -q 'Source: `agents/bee.md` + `agents/fon.md` + `agents/june.md` + `agents/kwan.md` + `agents/nam.md`' "$COND" && pass "conductor source list" || fail "source list wrong"
+COND_WORDS=$(wc -w < "$COND")
+[ "$COND_WORDS" -le 1500 ] && pass "conductor word cap ($COND_WORDS ≤ 1500)" || fail "conductor words = $COND_WORDS"
+
+echo "── 15. P1: web export usage errors (exit 2) ──"
+(cd "$REPO_ROOT" && expect_exit "web --no-collapse --team" 2 env HOME="$SANDBOX_HOME" "$BIN" export chatgpt --team kwan --no-collapse)
+(cd "$REPO_ROOT" && expect_exit "web --collapse --agent" 2 env HOME="$SANDBOX_HOME" "$BIN" export chatgpt --collapse --agent aiy)
+(cd "$REPO_ROOT" && expect_exit "web --collapse + --no-collapse" 2 env HOME="$SANDBOX_HOME" "$BIN" export chatgpt --collapse --no-collapse)
+
+echo "── 16. P1: init-workspace ──"
+rm -rf "$SANDBOX_HOME/para"
+(cd "$REPO_ROOT" && expect_exit "init-workspace fresh" 0 env HOME="$SANDBOX_HOME" "$BIN" init-workspace --home "$SANDBOX_HOME/para")
+[ -d "$SANDBOX_HOME/para/00-Inbox" ] && pass "para 00-Inbox created" || fail "00-Inbox missing"
+[ -f "$SANDBOX_HOME/para/00-Inbox/README.md" ] && pass "para README copied" || fail "para README missing"
+(cd "$REPO_ROOT" && expect_exit "init-workspace no-op" 4 env HOME="$SANDBOX_HOME" "$BIN" init-workspace --home "$SANDBOX_HOME/para")
+(cd "$REPO_ROOT" && expect_exit "init-workspace dry-run fresh" 0 env HOME="$SANDBOX_HOME" "$BIN" init-workspace --home "$SANDBOX_HOME/para2" --dry-run)
+[ ! -d "$SANDBOX_HOME/para2" ] && pass "dry-run writes nothing" || fail "dry-run created dirs"
+
+echo "── 17. P1: migrate ──"
+MIG_DIR="$SANDBOX_HOME/mig-agents"
+rm -rf "$MIG_DIR" && mkdir -p "$MIG_DIR"
+# Pre-migration fixtures: repo agents/*.md are now canonical (post-migrate, they
+# carry warp_version), so migrate would no-op on them. Use the gitignored
+# *.md.bak originals; fall back to HEAD when a .bak is missing.
+for f in aiy lin; do
+  if [ -f "$REPO_ROOT/agents/$f.md.bak" ]; then
+    cp "$REPO_ROOT/agents/$f.md.bak" "$MIG_DIR/$f.md"
+  else
+    git -C "$REPO_ROOT" show "HEAD:agents/$f.md" > "$MIG_DIR/$f.md"
+  fi
+done
+(cd "$REPO_ROOT" && expect_exit "migrate dry-run" 0 env HOME="$SANDBOX_HOME" "$BIN" migrate --agents-dir "$MIG_DIR" --dry-run)
+if grep -q "warp_version" "$MIG_DIR/aiy.md" 2>/dev/null; then fail "dry-run must not stamp"; else pass "dry-run writes nothing"; fi
+(cd "$REPO_ROOT" && expect_exit "migrate real" 0 env HOME="$SANDBOX_HOME" "$BIN" migrate --agents-dir "$MIG_DIR")
+[ -f "$MIG_DIR/aiy.md.bak" ] && pass "migrate .bak written" || fail ".bak missing"
+grep -q "warp_version: 1" "$MIG_DIR/aiy.md" && pass "migrate stamped aiy.md" || fail "aiy.md not stamped"
+(cd "$REPO_ROOT" && expect_exit "migrate idempotent no-op" 4 env HOME="$SANDBOX_HOME" "$BIN" migrate --agents-dir "$MIG_DIR")
+
+echo "── 18. P1: version ──"
+VER=$(env HOME="$SANDBOX_HOME" "$BIN" --version 2>&1)
+echo "$VER" | grep -q "0.2.0-p1" && pass "version 0.2.0-p1" || fail "version = $VER"
 
 echo
 echo "══════════════════════════════════════════════"

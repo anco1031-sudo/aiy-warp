@@ -44,7 +44,7 @@
 |---|---|---|---|---|---|
 | **opencode** (current) | ✅ native (`~/.config/opencode/agents/`) | ✅ native (`skills/`) | ✅ `task()` / @mention | ✅ SESSION.md + CoWorkspace | **Live today** |
 | **New opencode machine** | ✅ copy from repo | ✅ copy from repo | ✅ same | ✅ carry SESSION.md | Ready now |
-| **ChatGPT / Gemini / web chat** | 🟡 persona prose adapts directly | 🟡 manual paste / GPTs action | ❌ single-agent mode | 🟡 condensed summary | V1 goal |
+| **ChatGPT / Gemini / web chat** | ✅ condensed persona (P1) | 🟡 manual paste / GPTs action | ❌ single-agent mode | 🟡 condensed summary | **Live (P1)** |
 | **Claude Code / Codex / others** | 🟡 needs frontmatter → format mapping | 🟡 mostly portable | 🟡 adapter needed | 🟡 adapter needed | Backlog |
 
 ## 3. The Future: `aiy warp` CLI

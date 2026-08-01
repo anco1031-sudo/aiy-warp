@@ -10,6 +10,8 @@
 
 This note converts `CLI_SPEC.md` into a decision-complete build plan. Pao implements exactly this; Fah tests exactly this. Deviations from spec are **explicitly called out** with rationale and flagged to Aiy.
 
+> **P1 shipped (0.2.0-p1):** condensed-persona engine, `export chatgpt|gemini|web`, `init-workspace`, `migrate`, and skill parameterization are built per **`install/DESIGN-NOTE-P1.md`** (executed inline this session — see §8 there). This P0 note governs only the P0 scope below.
+
 ---
 
 ## 1. Scope Confirmation (P0 only)
@@ -55,7 +57,7 @@ A naive word scan makes the P0 exit criterion (§7: fresh machine → install su
 install/
 ├── CLI_SPEC.md            # the contract (source of truth)
 ├── DESIGN-NOTE.md         # this note
-├── README-P0.md           # build/run/test instructions (Pao/Fah output)
+├── README.md              # build/run/test instructions (Pao/Fah output)
 ├── bundles.yaml           # interim org-chart manifest (18 agents)
 ├── warp.config.example    # host-local config template (gitignored real one)
 ├── src/                   # Go module (P0 build)

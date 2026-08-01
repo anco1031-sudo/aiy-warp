@@ -84,8 +84,9 @@ func (k *Kit) resolveAgent(b *Bundles, name string) ([]string, error) {
 }
 
 func (k *Kit) resolveTeam(b *Bundles, dept string) ([]string, error) {
+	dept = b.ResolveTeam(dept)
 	if !b.HasDept(dept) {
-		return nil, fmt.Errorf("unknown team %q — departments: %s", dept, strings.Join(b.Departments, ", "))
+		return nil, fmt.Errorf("unknown team %q — departments: %s (or a department head name like \"kwan\")", dept, strings.Join(b.Departments, ", "))
 	}
 	var files []string
 	for _, n := range b.Team(dept) {

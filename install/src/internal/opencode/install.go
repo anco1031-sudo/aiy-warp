@@ -96,8 +96,9 @@ func RunInstall(o InstallOptions) (*InstallResult, error) {
 			merged := contents[e.Rel]
 			if strings.HasPrefix(e.Rel, "agents/") {
 				if host, err := os.ReadFile(destPath(o.DestDir, e.Rel)); err == nil {
-					if m, err := manifest.MergeAgentContent(contents[e.Rel], string(host)); err == nil {
+					if m, warns, err := manifest.MergeAgentContentV(contents[e.Rel], string(host)); err == nil {
 						merged = m
+						res.Notes = append(res.Notes, warns...)
 					}
 				}
 			}

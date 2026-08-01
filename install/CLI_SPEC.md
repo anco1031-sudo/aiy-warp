@@ -125,9 +125,9 @@ Current `agents/*.md` use opencode-native frontmatter (`description`, `mode`, `m
 | Platform | Mechanism | What the renderer emits | Delegation |
 |---|---|---|---|
 | **opencode** (live) | Native copy | `agents/*.md` → `~/.config/opencode/agents/`; `skills/*` → `~/.config/opencode/skills/` | ✅ `task()` / @mention |
-| **ChatGPT** (V1) | Custom GPT "Instructions" field | Condensed persona prose (personality + directives + boundaries), skills as instruction blocks or Knowledge files | ❌ single-agent |
-| **Gemini** (V1) | Gem "Instructions" + files | Same condensed persona; skills attachable as docs | ❌ single-agent |
-| **Web chat** (V1) | One pastable conductor prompt | Collapsed persona + embedded routing table | ❌ single-agent |
+| **ChatGPT** (P1, live) | Custom GPT "Instructions" field | Condensed persona prose (personality + directives + boundaries), skills as instruction blocks or Knowledge files | ❌ single-agent |
+| **Gemini** (P1, live) | Gem "Instructions" + files | Same condensed persona; skills attachable as docs | ❌ single-agent |
+| **Web chat** (P1, live) | One pastable conductor prompt | Collapsed persona + embedded routing table | ❌ single-agent |
 | **Claude Code** (P2) | Adapter | CLAUDE.md + subagent config mapping | ✅ (future, via adapter) |
 
 ### 3.1 Condensation Rules (all prose renderers)
@@ -200,7 +200,7 @@ Rules: head's `directives`/`boundaries` form the frame; executors' `role`+`perso
 **Principle (from WARP.md):** the kit carries identities + workflows, never credentials.
 
 1. **Credentials stay host-native** — tokens, API keys, bot tokens live in host env/config (`.env`, keychain, `opencode auth`, platform-native settings). The CLI never reads, writes, or transports them.
-2. **Parameterization** — skills currently embed host paths + identifiers (`aiy-messaging/SKILL.md` has `/home/lu5her/02-Areas/…`, Discord channel `1527698229347487904`, Telegram chat `852106923`). P1 rewrites these to placeholders:
+2. **Parameterization** — skills embedded host paths + identifiers (`aiy-messaging/SKILL.md` had `/home/lu5her/02-Areas/…`, Discord channel `1234567890123456`, Telegram chat `123456789`). **P1 done (DESIGN-NOTE-P1 §7)**: rewritten to placeholders —
    - `{{HOME}}` / `{{WARP_WORKSPACE}}` / `{{OBSIDIAN_ROOT}}` → resolved at install from `warp.config` (gitignored, host-local).
    - `$AIY_DISCORD_TODO_CHANNEL`, `$AIY_TELEGRAM_CHAT_ID` → env vars documented in the skill, injected at runtime by the host.
 3. **`warp.config`** (never committed — add `.gitignore` entry): host-local map of `home`, `workspace`, `obsidian_root`, platform destinations, env overrides.
@@ -242,7 +242,7 @@ Output: per-check PASS/FAIL + overall exit code (0 clean / 3 drift).
 | Phase | Scope | Exit criteria |
 |---|---|---|
 | **P0** (1–2 wks) | `install opencode` + `export opencode` + `doctor opencode` + `list`. Legacy frontmatter parse, bundles.yaml, sha256 manifest, merge policy, redaction gate, exit codes. | Fresh machine → `aiy warp install opencode` → all 18 agents answer via @mention; `doctor` = 0. |
-| **P1** (2–3 wks) | Condensed persona engine (condensation rules §3.1, pipeline collapse §3.2) → `export chatgpt|gemini|web`; `migrate` to stamp canonical frontmatter into all 18 files; skill parameterization (`{{…}}` + env vars) for aiy-messaging + others. | `aiy warp export chatgpt --team kwan` pastes into a Custom GPT and produces a coherent trading verdict. |
+| **P1** (2–3 wks) | Condensed persona engine (condensation rules §3.1, pipeline collapse §3.2) → `export chatgpt|gemini|web`; `migrate` to stamp canonical frontmatter into all 18 files; skill parameterization (`{{…}}` + env vars) for aiy-messaging + others. | ✅ **SHIPPED 0.2.0-p1** — `aiy warp export chatgpt --team kwan` → conductor (50/50 integration green); `init-workspace` + `migrate` live; kit is identifier-clean. |
 | **P2** (3–4 wks) | `sync` full 3-way + `--prune`; auto-sync daemon (watch repo → push to hosts); claude-code adapter; `--json` everywhere; CI lint (frontmatter schema + no-secrets scan). | `aiy warp sync` on any host converges to manifest; drift alerts fire on change. |
 
 **Tech choice — Go (recommended).** Rationale: single static binary (no runtime deps on any host — critical for "warp to a new machine"), trivial cross-compile (Linux/macOS/Windows), strong stdlib for file-tree ops + concurrency (sync daemon), and mature YAML (`gopkg.in/yaml.v3`). Rust is viable but slower to ship for this surface area; Python ships fastest but drags a runtime onto fresh hosts — acceptable only as a P0 prototype if Pao prefers it. **Decision: Go, held by Pao, spec-verified by An, QA by Fah.**
@@ -253,7 +253,7 @@ Output: per-check PASS/FAIL + overall exit code (0 clean / 3 drift).
 
 1. **`install/src/` missing** — expected (P0 creates it); this spec is the contract.
 2. **Org chart lives in prose only** — `department`/`reports_to` are not machine-readable in `agents/*.md`; P0 must ship `bundles.yaml` as the interim source of truth until `migrate` runs. **Recommended: add canonical frontmatter to the 18 files in P1, not P0.**
-3. **Sensitive identifiers in a public repo** — `skills/aiy-messaging/SKILL.md` embeds the Telegram chat ID (`852106923`) and Discord channel IDs in plaintext; README calls chat IDs sensitive. Parameterize in P1; consider `git filter-repo` scrub if the repo is/was public.
+3. **Sensitive identifiers in a public repo** — `skills/aiy-messaging/SKILL.md` embeds the Telegram chat ID (`123456789`) and Discord channel IDs in plaintext; README calls chat IDs sensitive. Parameterize in P1; consider `git filter-repo` scrub if the repo is/was public.
 4. **`docs/` vs `playbooks/` overlap** — `docs/WARP.md` (vision) and `playbooks/Architecture_Decisions.md` (ADRs) risk duplication; keep `WARP.md` as the single narrative home, ADRs for decisions.
 5. **`.gitignore` is good** — add `warp.lock`, `warp.config`, and `*.local.yaml` in P0.
 

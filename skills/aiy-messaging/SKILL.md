@@ -11,30 +11,30 @@ Send messages to Louis via Discord and Telegram, including Daemon management and
 
 | Resource | Path |
 |----------|------|
-| Discord Script | `/home/lu5her/02-Areas/Resources/Aiy/Integrations/Discord/aiy_dc.sh` |
-| Telegram Script | `/home/lu5her/02-Areas/Resources/Aiy/Integrations/Telegram/aiy_tg.sh` |
-| Telegram Daemon | `/home/lu5her/02-Areas/Resources/Aiy/Integrations/Telegram/aiy_daemon.py` |
-| Schedule Data | `/home/lu5her/02-Areas/Resources/Aiy/Integrations/Telegram/schedule.json` |
-| Daemon Log | `/home/lu5her/02-Areas/Resources/Aiy/Integrations/Telegram/daemon.log` |
+| Discord Script | `{{HOME}}/02-Areas/Resources/Aiy/Integrations/Discord/aiy_dc.sh` |
+| Telegram Script | `{{HOME}}/02-Areas/Resources/Aiy/Integrations/Telegram/aiy_tg.sh` |
+| Telegram Daemon | `{{HOME}}/02-Areas/Resources/Aiy/Integrations/Telegram/aiy_daemon.py` |
+| Schedule Data | `{{HOME}}/02-Areas/Resources/Aiy/Integrations/Telegram/schedule.json` |
+| Daemon Log | `{{HOME}}/02-Areas/Resources/Aiy/Integrations/Telegram/daemon.log` |
 
 ## 🎯 Discord (`aiy_dc.sh`)
 
 ### Prerequisites
 - Bot Token (embedded in script)
-- Channel ID for target channel
+- Channel ID for target channel (`$AIY_DISCORD_TODO_CHANNEL` for the to-do channel)
 - Bot needs `Send Messages` + `Manage Channels` permissions
 
 ### Usage
 
 **Send message to channel:**
 ```bash
-cd /home/lu5her/02-Areas/Resources/Aiy/Integrations/Discord/
+cd {{HOME}}/02-Areas/Resources/Aiy/Integrations/Discord/
 ./aiy_dc.sh <channel_id> "message text"
 ```
 
 Example:
 ```bash
-./aiy_dc.sh 1527698229347487904 "Hello Louis 💕"
+./aiy_dc.sh $AIY_DISCORD_TODO_CHANNEL "Hello Louis 💕"
 ```
 
 **Send to To-Do channel (pre-configured ✅-to-do):**
@@ -60,7 +60,7 @@ Example:
 ### Channel IDs
 | Channel | ID |
 |---------|-----|
-| ✅-to-do | `1527698229347487904` |
+| ✅-to-do | `$AIY_DISCORD_TODO_CHANNEL` |
 | *(add more as discovered)* | |
 
 ---
@@ -69,13 +69,13 @@ Example:
 
 ### Prerequisites
 - Bot Token (embedded)
-- Chat ID (Louis's chat: `852106923`)
+- Chat ID (Louis's chat: `$AIY_TELEGRAM_CHAT_ID`)
 
 ### Usage
 
 **Send plain text:**
 ```bash
-cd /home/lu5her/02-Areas/Resources/Aiy/Integrations/Telegram/
+cd {{HOME}}/02-Areas/Resources/Aiy/Integrations/Telegram/
 ./aiy_tg.sh "message to Louis"
 ```
 
@@ -91,7 +91,7 @@ cd /home/lu5her/02-Areas/Resources/Aiy/Integrations/Telegram/
 
 **Send to specific chat (override default):**
 ```bash
-./aiy_tg.sh --chat_id 852106923 "specific message"
+./aiy_tg.sh --chat_id $AIY_TELEGRAM_CHAT_ID "specific message"
 ```
 
 ### Response
@@ -106,7 +106,7 @@ Daemon that runs 24/7 to listen for and send messages.
 
 ### Start Daemon
 ```bash
-cd /home/lu5her/02-Areas/Resources/Aiy/Integrations/Telegram/
+cd {{HOME}}/02-Areas/Resources/Aiy/Integrations/Telegram/
 python3 aiy_daemon.py
 ```
 
@@ -171,7 +171,7 @@ When you need to send a message to Louis, follow these steps:
 
 ### Step 4: Obsidian Integration
 After sending a message, record it at:
-- Log: `Aiy_Workspace/Aiy/Logs/YYYY-MM.md`
+- Log: `{{OBSIDIAN_ROOT}}/Aiy/Logs/YYYY-MM.md`
 - If it's a task/decision → Knowledge base
 
 ---
@@ -202,7 +202,7 @@ After sending a message, record it at:
 ### Daemon
 ```bash
 # Start
-python3 /home/lu5her/02-Areas/Resources/Aiy/Integrations/Telegram/aiy_daemon.py &
+python3 {{HOME}}/02-Areas/Resources/Aiy/Integrations/Telegram/aiy_daemon.py &
 
 # Check running
 pgrep -f aiy_daemon.py

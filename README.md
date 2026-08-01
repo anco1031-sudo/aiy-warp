@@ -15,7 +15,7 @@ The soul lives in markdown. So it can live **anywhere**.
 | `skills/` | 5 operational skills (affiliate-poster, aiy-messaging, obsidian, teach-protocol, trading-pipeline) | Reusable workflows with triggers |
 | `templates/` | Obsidian workspace templates (Daily Log, Knowledge, Reflection) | The memory format |
 | `playbooks/` | Team Charter, Architecture Decisions, Knowledge INDEX | The shared rules of engagement |
-| `install/` | Future CLI installer spec + cross-platform warp tooling | See `install/README.md` |
+| `install/` | The `aiy warp` CLI (Go binary) — install/export/doctor/list + P1: `export chatgpt\|gemini\|web`, `migrate`, `init-workspace` | See `install/README.md` |
 | `export/examples/` | Real exported personas (proof of concept) | e.g. Kwan-team conductor, Aiy personal copy |
 | `scaffold/` | PARA workspace template for filesystem root (00-Inbox … 05-Other) | "Home system" of a fresh machine |
 | `docs/WARP.md` | The multi-platform architecture & vision | Start here |
