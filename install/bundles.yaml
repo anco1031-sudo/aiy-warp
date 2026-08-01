@@ -1,0 +1,134 @@
+# bundles.yaml — interim org-chart manifest for `aiy warp`
+# Source of truth until `aiy warp migrate` stamps canonical frontmatter into agents/*.md (P1).
+# Derived from: agents/aiy.md routing tables (§3 THE TEAM), department-head team files,
+#               and skills/*/SKILL.md ownership declarations.
+# Schema version: warp v1 (see install/CLI_SPEC.md §2.1, §4)
+warp_version: 1
+
+departments:
+  - core
+  - tech
+  - security
+  - legal
+  - content
+  - trading
+
+agents:
+  # ── core ────────────────────────────────────────────────────────────
+  - name: aiy
+    rank: primary
+    department: core
+    reports_to: null
+    skills: [aiy-messaging, obsidian, affiliate-poster, teach-protocol]
+
+  # ── tech (Head: lin) ────────────────────────────────────────────────
+  - name: lin
+    rank: head
+    department: tech
+    reports_to: aiy
+    skills: []
+  - name: an
+    rank: executor
+    department: tech
+    reports_to: lin
+    skills: []
+  - name: pao
+    rank: executor
+    department: tech
+    reports_to: lin
+    skills: []
+  - name: mint
+    rank: executor
+    department: tech
+    reports_to: lin
+    skills: []
+  - name: fah
+    rank: executor
+    department: tech
+    reports_to: lin
+    skills: []
+  - name: cloud
+    rank: executor
+    department: tech
+    reports_to: lin
+    skills: []
+
+  # ── security (Head: sai) ────────────────────────────────────────────
+  - name: sai
+    rank: head
+    department: security
+    reports_to: aiy
+    skills: []
+  - name: pleng
+    rank: executor
+    department: security
+    reports_to: sai
+    skills: []
+
+  # ── legal (Head: jean) ──────────────────────────────────────────────
+  - name: jean
+    rank: head
+    department: legal
+    reports_to: aiy
+    skills: []
+
+  # ── content (Head: cher) ────────────────────────────────────────────
+  - name: cher
+    rank: head
+    department: content
+    reports_to: aiy
+    skills: []
+  - name: ploy
+    rank: executor
+    department: content
+    reports_to: cher
+    skills: []
+  - name: jewel
+    rank: executor
+    department: content
+    reports_to: cher
+    skills: []
+
+  # ── trading (Head: kwan) ────────────────────────────────────────────
+  - name: kwan
+    rank: head
+    department: trading
+    reports_to: aiy
+    skills: [trading-pipeline]
+  - name: fon
+    rank: executor
+    department: trading
+    reports_to: kwan
+    skills: []
+  - name: june
+    rank: executor
+    department: trading
+    reports_to: kwan
+    skills: []
+  - name: bee
+    rank: executor
+    department: trading
+    reports_to: kwan
+    skills: []
+  - name: nam
+    rank: executor
+    department: trading
+    reports_to: kwan
+    skills: []
+
+skills:
+  - name: affiliate-poster
+    owned_by: aiy
+    departments: [core]
+  - name: aiy-messaging
+    owned_by: aiy
+    departments: [core]
+  - name: obsidian
+    owned_by: aiy
+    departments: [core]
+  - name: teach-protocol
+    owned_by: aiy
+    departments: [core]
+  - name: trading-pipeline
+    owned_by: kwan
+    departments: [trading]

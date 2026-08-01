@@ -1,0 +1,36 @@
+# warp.config.example — host-local configuration for `aiy warp`
+# Copy to ~/.config/aiy-warp/warp.config and edit. NEVER commit the real one
+# (gitignored: warp.config, *.local.yaml). Values here are placeholders.
+#
+# P0 note: opencode destinations are derived from $HOME automatically, so a
+# config file is OPTIONAL in P0. This template exists for P1 host-path
+# parameterization ({{HOME}}, {{WARP_WORKSPACE}}, {{OBSIDIAN_ROOT}}) and for
+# doctor check 6 (path resolution).
+
+version: 1
+
+# Local paths on THIS machine (used for doctor check 6 + P1 parameterization)
+paths:
+  home: /home/lu5her                # {{HOME}}
+  workspace: /home/lu5her/01-Projects/aiy-warp   # {{WARP_WORKSPACE}}
+  obsidian_root: /home/lu5her/myObsidian/Aiy_Workspace   # {{OBSIDIAN_ROOT}}
+
+# Platform destinations (opencode is P0; others land in P1/P2)
+platforms:
+  opencode:
+    config_dir: ~/.config/opencode   # agents/ + skills/ land here
+    # custom_dest: ""                # override if not under $HOME
+
+# Manifest / state location (warp.lock written beside config)
+state_dir: ~/.config/aiy-warp
+
+# Explicitly-declared PUBLIC identifiers allowed to pass the export redaction
+# gate (see CLI_SPEC.md §5.4 --allow-identifiers). Keep this list minimal.
+# allow_identifiers:
+#   - "1527698229347487904"   # example public Discord channel
+#   - "852106923"             # example public Telegram chat
+
+# Environment overrides injected at runtime by the host (P1 parameterization)
+# env:
+#   AIY_DISCORD_TODO_CHANNEL: ""
+#   AIY_TELEGRAM_CHAT_ID: ""

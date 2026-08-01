@@ -16,3 +16,8 @@ node_modules/
 __pycache__/
 *.pyc
 .tmp/
+
+# aiy warp — host-local state & config (CLI_SPEC §8.5)
+warp.lock
+warp.config
+*.local.yaml
