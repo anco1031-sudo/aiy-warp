@@ -18,17 +18,18 @@ tags: [project, warp, cli]
 ## 📌 Milestones
 
 - [x] M0: สร้าง repo + WARP architecture + spec — 01 ส.ค.
-- [x] M1: P0 build (install/export/doctor/list) — 01 ส.ค. ✅ (build+test เสร็จ, รอ Aiy review/commit)
+- [x] M1: P0 build (install/export/doctor/list) — 01 ส.ค. ✅ (ปิด P0 แล้ว)
 - [ ] M2: P1 (web chat export, init-workspace) — due ส.ค. ปลาย
 - [ ] M3: P2 (sync daemon, claude adapter) — อนาคต
 
 ## ✅ Definition of Done (P0)
 
 - [x] `aiy warp install opencode` ผ่านเครื่องใหม่ (sandbox HOME) — integration suite 30/30 ✅
-- [x] `aiy warp doctor opencode` = 0 — verified in sandbox ✅
-- [x] Redaction gate ทำงาน (exit 5 เมื่อเจอ secret) — fake-secret test ✅
-- [x] Fah test ผ่านครบ — unit + integration 30/30 ✅
-- [ ] E2E จริง: @mention ทั้ง 18 คนตอบบนเครื่องใหม่ — เหลือ Louis/Aiy ยืนยัน
+- [x] `aiy warp doctor opencode` = 0 — verified in sandbox + E2E เครื่องจริง ✅
+- [x] Redaction gate ทำงาน (exit 5 เมื่อเจอ secret + IDs) — fake-secret + Telegram ID test ✅
+- [x] Fah test ผ่านครบ — unit 27/27 + integration 30/30 ✅
+- [x] Pao code review + fixes F1-F9 — symlink-safe, frontmatter no-drop, Telegram gate, PGP regex ✅
+- [x] E2E จริง: install + doctor บนเครื่องนี้ — ผ่าน (แล้วลบของออก คืนสภาพ 100%) ✅
 
 ## 📝 Notes
 
@@ -39,5 +40,7 @@ tags: [project, warp, cli]
 - **Spec interpretation (flag ให้ Aiy):** redaction gate = credential VALUES
   (entropy-based) ไม่ใช่ word-scan — มิฉะนั้น P0 exit criterion (doctor=0)
   เป็นไปไม่ได้กับเนื้อหา kit ปัจจุบัน (prose "token" + IDs) ดู `DESIGN-NOTE.md §2`
-- **ไม่ commit** — Aiy review แล้ว commit เอง
+- **ไม่ commit** — Aiy review แล้ว commit เอง → ✅ committed `2ff6e2b` (P0 ปิด)
 - Deadline อัปเดตได้ — ถ้า P0 เลื่อน ให้แก้ frontmatter (git เห็น history)
+- **Governance lesson:** P0 นี้ Lin build เองแทน delegate → Pao review (fresh eyes) จับ MAJOR bugs ได้จริง — ต่อไป PO ต้อง cascade เสมอ
+- **P1 backlog:** init-workspace, export chatgpt/gemini/web, migrate, skill parameterization, NITs F10-F12
