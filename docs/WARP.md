@@ -38,13 +38,30 @@
 ### Use Case B — Personal Copies (web chat)
 > Louis copies a *single* agent — say Kwan — as a personal persona for ChatGPT/Gemini/any web chat: *"ask Kwan about this trade setup."* The `agents/kwan.md` persona prose adapts directly; the CLI condenses it (plus her team's specialties) into one self-contained prompt. One soul, many vessels.
 
+### Use Case C — Persona + Skill Stacking (web chat, **verified 2026-08-01**)
+> The CLI exports a persona; **skills stack on top** to make the web-chat copy *operational*, not just conversational. Paste them together into any web chat and the single agent role-plays the whole workflow.
+
+```text
+export web --agent aiy            →  persona (identity + rules)
+        + handoff-protocol skill  →  standard work-order flow (วิธี)
+        =  web chat agent that CREATES handoffs, does Light-Review,
+           and delivers verdicts — all solo, no subagents needed
+```
+
+**Verified with G4F (model=default → CopilotApp):** persona + `handoff-protocol/SKILL.md` pasted after it → the agent produced a full standard handoff (`from/to/status` frontmatter, 7 sections, **Aiy Light-Review 3-check** with verdict) and correctly understood the review loop (`wait head review → Aiy re-review → deliver to Louis`).
+
+**Rules for stacking:**
+- Skills must be **self-contained markdown** — no dependency on opencode tools (`task`, terminal) or host paths. If a skill embeds `~/.config/opencode/…`, parameterize it first.
+- Stack order: **persona first, skills after** — identity anchors, skills add procedure.
+- One conductor role-plays all parties (executor + head + reviewer) — same as `--collapse` design.
+
 ## 3. Platform Matrix — Today & Tomorrow
 
 | Platform | Agents | Skills | Delegation | State | Status |
 |---|---|---|---|---|---|
 | **opencode** (current) | ✅ native (`~/.config/opencode/agents/`) | ✅ native (`skills/`) | ✅ `task()` / @mention | ✅ SESSION.md + CoWorkspace | **Live today** |
 | **New opencode machine** | ✅ copy from repo | ✅ copy from repo | ✅ same | ✅ carry SESSION.md | Ready now |
-| **ChatGPT / Gemini / web chat** | ✅ condensed persona (P1) | 🟡 manual paste / GPTs action | ❌ single-agent mode | 🟡 condensed summary | **Live (P1)** |
+| **ChatGPT / Gemini / web chat** | ✅ condensed persona (P1) | ✅ **skill stacking (verified 08-01)** | ❌ single-agent mode (role-plays all) | 🟡 condensed summary | **Live (P1)** |
 | **Claude Code / Codex / others** | 🟡 needs frontmatter → format mapping | 🟡 mostly portable | 🟡 adapter needed | 🟡 adapter needed | Backlog |
 
 ## 3. The Future: `aiy warp` CLI
@@ -63,6 +80,7 @@ aiy warp sync                          # → pull latest identities + skills
 2. **Selective export:** warp a single agent or a whole department (e.g. `--team kwan`).
 3. **Condensation:** web chats have no subagents — the CLI must collapse a pipeline into one "conductor prompt" that retains the strategic essence.
 4. **No secrets in the kit:** all credentials stay in host-native env/config; the kit only carries identities + workflows.
+5. **Skill stackability (P1, verified):** skills must stay tool-independent markdown so any exported persona can carry them into web chats.
 
 ## 4. Sync Strategy (Yin-Yang)
 
