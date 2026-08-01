@@ -20,7 +20,7 @@ tags: [project, warp, cli]
 - [x] M0: สร้าง repo + WARP architecture + spec — 01 ส.ค.
 - [x] M1: P0 build (install/export/doctor/list) — 01 ส.ค. ✅ (ปิด P0 แล้ว)
 - [x] M2: P1 (web chat export, init-workspace, migrate) — 01 ส.ค. ✅ (ปิด P1 แล้ว)
-- [ ] M3: P2 (sync daemon, claude adapter) — อนาคต
+- [x] M3: P2 (sync daemon, claude adapter) — ~~อนาคต~~ **ยกเลิก 01 ส.ค.** (Louis: ไม่จำเป็น — kit เปลี่ยนน้อย + git pull ง่ายกว่า; export ครบทุกแพลตฟอร์มแล้ว)
 
 ## ✅ Definition of Done (P0)
 
