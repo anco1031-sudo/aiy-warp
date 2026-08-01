@@ -16,6 +16,7 @@ The soul lives in markdown. So it can live **anywhere**.
 | `templates/` | Obsidian workspace templates (Daily Log, Knowledge, Reflection) | The memory format |
 | `playbooks/` | Team Charter, Architecture Decisions, Knowledge INDEX | The shared rules of engagement |
 | `install/` | Future CLI installer spec + cross-platform warp tooling | See `install/README.md` |
+| `export/examples/` | Real exported personas (proof of concept) | e.g. Kwan-team conductor, Aiy personal copy |
 | `docs/WARP.md` | The multi-platform architecture & vision | Start here |
 
 ## 🚀 Quick start (opencode, today)
