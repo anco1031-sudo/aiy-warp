@@ -113,17 +113,23 @@ func check4(k *kit.Kit, b *kit.Bundles) Check {
 func check5(k *kit.Kit, repoRoot string) Check {
 	c := Check{ID: 5, Name: "no credential values in payload"}
 	scan := map[string]string{}
+	failed := 0
 	for _, rel := range k.All() {
 		if b, err := os.ReadFile(filepath.Join(repoRoot, filepath.FromSlash(rel))); err == nil {
 			scan[rel] = string(b)
+		} else {
+			c.Hints = append(c.Hints, rel+": unreadable — cannot scan for credentials")
+			failed++
 		}
 	}
 	rep := redact.Scan(scan, nil)
-	if rep.HasBlocks() {
+	if failed > 0 || rep.HasBlocks() {
 		c.Status = Fail
-		c.Hints = append(c.Hints, "credential values found:")
-		for _, f := range rep.Blocks {
-			c.Hints = append(c.Hints, fmt.Sprintf("  %s:%d (%s)", f.File, f.Line, f.Pattern))
+		if rep.HasBlocks() {
+			c.Hints = append(c.Hints, "credential values found:")
+			for _, f := range rep.Blocks {
+				c.Hints = append(c.Hints, fmt.Sprintf("  %s:%d (%s)", f.File, f.Line, f.Pattern))
+			}
 		}
 	} else {
 		c.Status = Pass

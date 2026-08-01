@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"sort"
+	"strings"
 
 	"github.com/anco1031-sudo/aiy-warp/install/src/internal/kit"
 	"github.com/anco1031-sudo/aiy-warp/install/src/internal/manifest"
@@ -73,15 +75,39 @@ func Run(o Options) (*Result, error) {
 	return res, nil
 }
 
-// check1 — all expected files present at destination, drift hashes match the
-// repo (source of truth, CLI_SPEC.md §6.1).
+// check1 — all files recorded in warp.lock are present at the destination with
+// drift hashes matching the repo (source of truth, CLI_SPEC.md §6.1). When a
+// lock exists, only its file set is verified: kit files intentionally not
+// installed (selective install) are warnings, not drift.
 func check1(k *kit.Kit, destDir, stateDir string) Check {
 	c := Check{ID: 1, Name: "installed files present & hashes match"}
-	if lock, err := manifest.Load(filepath.Join(stateDir, "warp.lock")); err == nil && lock == nil {
+	lock, err := manifest.Load(filepath.Join(stateDir, "warp.lock"))
+	if err != nil {
+		c.Status = Fail
+		c.Hints = append(c.Hints, "warp.lock unreadable: "+err.Error())
+		return c
+	}
+	rels := k.All()
+	if lock != nil && len(lock.Files) > 0 {
+		rels = make([]string, 0, len(lock.Files))
+		for r := range lock.Files {
+			rels = append(rels, r)
+		}
+		sort.Strings(rels)
+		if notInstalled := kitFilesNotIn(k.All(), rels); len(notInstalled) > 0 {
+			shown, suffix := notInstalled, ""
+			if len(shown) > 5 {
+				shown, suffix = shown[:5], fmt.Sprintf(" … %d more", len(notInstalled)-5)
+			}
+			c.Warns = append(c.Warns, fmt.Sprintf(
+				"%d kit file(s) not installed (selective install): %s%s — not drift",
+				len(notInstalled), strings.Join(shown, ", "), suffix))
+		}
+	} else {
 		c.Warns = append(c.Warns, "no warp.lock — installed state unknown (run 'aiy warp install opencode')")
 	}
-	missing, drifted := 0, 0
-	for _, rel := range k.All() {
+	missing, drifted, repoUnreadable := 0, 0, 0
+	for _, rel := range rels {
 		dest, err := os.ReadFile(filepath.Join(destDir, filepath.FromSlash(rel)))
 		if err != nil {
 			missing++
@@ -89,18 +115,37 @@ func check1(k *kit.Kit, destDir, stateDir string) Check {
 		}
 		repo, err := os.ReadFile(filepath.Join(k.Root, filepath.FromSlash(rel)))
 		if err != nil {
+			repoUnreadable++
+			c.Hints = append(c.Hints, rel+": repo file unreadable ("+err.Error()+")")
 			continue
 		}
 		if manifest.KitHash(string(dest), rel) != manifest.KitHash(string(repo), rel) {
 			drifted++
 		}
 	}
-	if missing == 0 && drifted == 0 {
+	if missing == 0 && drifted == 0 && repoUnreadable == 0 {
 		c.Status = Pass
-		c.Hints = append(c.Hints, fmt.Sprintf("%d files in sync", len(k.All())))
+		c.Hints = append(c.Hints, fmt.Sprintf("%d files in sync", len(rels)))
 	} else {
 		c.Status = Fail
-		c.Hints = append(c.Hints, fmt.Sprintf("%d missing, %d drifted — run 'aiy warp install opencode' (--force if needed)", missing, drifted))
+		c.Hints = append(c.Hints, fmt.Sprintf(
+			"%d missing, %d drifted, %d repo-unreadable — run 'aiy warp install opencode' (--force if needed)",
+			missing, drifted, repoUnreadable))
 	}
 	return c
+}
+
+// kitFilesNotIn returns the sorted kit rels absent from the given subset.
+func kitFilesNotIn(all, subset []string) []string {
+	in := make(map[string]bool, len(subset))
+	for _, r := range subset {
+		in[r] = true
+	}
+	var out []string
+	for _, r := range all {
+		if !in[r] {
+			out = append(out, r)
+		}
+	}
+	return out
 }

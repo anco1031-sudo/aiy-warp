@@ -15,10 +15,10 @@ func cmdList(u *ui.UI, rest []string) int {
 	fs := flag.NewFlagSet("list", flag.ContinueOnError)
 	fs.SetOutput(io.Discard)
 	platformFlag := fs.String("platform", "opencode", "platform to list (P0: opencode)")
+	cfgPath := fs.String("config", "", "path to warp.config")
 	verbose := fs.Bool("verbose", false, "verbose output")
-	if err := fs.Parse(rest); err != nil {
-		fmt.Fprintln(u.Err, "aiy warp list:", err)
-		return errs.CodeUsage
+	if handled, code := parseCmdFlags(u, fs, rest); handled {
+		return code
 	}
 	p := *platformFlag
 	if platform != "" {
@@ -29,7 +29,7 @@ func cmdList(u *ui.UI, rest []string) int {
 		return errs.CodeUsage
 	}
 
-	repoRoot, _, bundles, code := setup(u, "", *verbose)
+	repoRoot, _, bundles, code := setup(u, *cfgPath, *verbose)
 	if code != errs.CodeOK {
 		return code
 	}

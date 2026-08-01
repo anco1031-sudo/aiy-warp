@@ -56,7 +56,7 @@ aiy warp migrate <agents-dir>              # (P1) upgrade legacy agent files →
 
 ```
 $ aiy warp install opencode --dry-run
-✓ Resolved kit: 18 agents, 5 skills, 3 templates, 3 playbooks
+✓ Resolved kit: 18 agents, 5 skills, 4 templates, 3 playbooks
 ✓ Platform opencode: dest ~/.config/opencode/ (agents/, skills/)
 ⚠ 2 files have local drift (see: aiy warp doctor opencode)
 → Would install: 23 files (new), 2 files (update, --force required)

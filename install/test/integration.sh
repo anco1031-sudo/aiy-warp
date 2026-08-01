@@ -95,18 +95,21 @@ rm -rf "$KIT_SANDBOX" && cp -r "$REPO_ROOT" "$KIT_SANDBOX" && rm -rf "$KIT_SANDB
 printf -- "---\ndescription: \"EVIL (อีวิล) — test\"\nmode: subagent\nmodel: opencode/x\ntoken: sk-test-abcdefghijklmnopqrstuvwxyz123456\n---\nbody\n" > "$KIT_SANDBOX/agents/evil.md"
 (cd "$KIT_SANDBOX" && expect_exit "install with planted secret" 5 env HOME="$SANDBOX_HOME" "$BIN" install opencode -y)
 (cd "$KIT_SANDBOX" && expect_exit "export with planted secret" 5 env HOME="$SANDBOX_HOME" "$BIN" export opencode --out "$OUT-evil")
-# export gate on identifiers: real kit has Discord snowflake → export blocked without allow-identifiers
+# export gate on identifiers: real kit has Discord snowflake + Telegram chat ID → export blocked without allow-identifiers
 (cd "$REPO_ROOT" && expect_exit "export opencode (identifiers block)" 5 env HOME="$SANDBOX_HOME" "$BIN" export opencode --out "$OUT")
 
 echo "── 8. Export flat set + --allow-identifiers ──"
-(cd "$REPO_ROOT" && expect_exit "export with --allow-identifiers" 0 env HOME="$SANDBOX_HOME" "$BIN" export opencode --out "$OUT" --allow-identifiers 1527698229347487904,1210049942192010)
+# F3 (redaction gate): Telegram IDs (852106923) are export-gated like Discord
+# snowflakes — the allowlist must declare all public IDs in the kit.
+ALLOW_IDS="1527698229347487904,1210049942192010,852106923"
+(cd "$REPO_ROOT" && expect_exit "export with --allow-identifiers" 0 env HOME="$SANDBOX_HOME" "$BIN" export opencode --out "$OUT" --allow-identifiers "$ALLOW_IDS")
 [ -f "$OUT/agents/aiy.md" ] && pass "export flat agents/aiy.md" || fail "export missing agents/aiy.md"
 [ -f "$OUT/skills/aiy-messaging/SKILL.md" ] && pass "export flat skill" || fail "export missing skill"
-STDOUT=$(env HOME="$SANDBOX_HOME" "$BIN" export opencode --stdout --allow-identifiers 1527698229347487904,1210049942192010 2>/dev/null | head -3)
+STDOUT=$(env HOME="$SANDBOX_HOME" "$BIN" export opencode --stdout --allow-identifiers "$ALLOW_IDS" 2>/dev/null | head -3)
 if echo "$STDOUT" | grep -q "#### agents/"; then pass "export --stdout works"; else fail "export --stdout broken: $STDOUT"; fi
 
 echo "── 9. Export with --agent selector ──"
-(cd "$REPO_ROOT" && expect_exit "export --agent aiy" 0 env HOME="$SANDBOX_HOME" "$BIN" export opencode --agent aiy --out "$OUT-aiy" --allow-identifiers 1527698229347487904,1210049942192010)
+(cd "$REPO_ROOT" && expect_exit "export --agent aiy" 0 env HOME="$SANDBOX_HOME" "$BIN" export opencode --agent aiy --out "$OUT-aiy" --allow-identifiers "$ALLOW_IDS")
 [ -f "$OUT-aiy/agents/aiy.md" ] && pass "agent bundle has aiy.md" || fail "agent bundle missing aiy.md"
 [ -f "$OUT-aiy/skills/obsidian/SKILL.md" ] && pass "agent bundle includes owned skills" || fail "agent bundle missing owned skill"
 

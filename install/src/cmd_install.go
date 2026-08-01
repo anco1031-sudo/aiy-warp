@@ -23,9 +23,8 @@ func cmdInstall(u *ui.UI, rest []string) int {
 	cfgPath := fs.String("config", "", "path to warp.config (default ~/.config/aiy-warp/warp.config)")
 	verbose := fs.Bool("verbose", false, "verbose output")
 	allowIDs := fs.String("allow-identifiers", "", "comma-separated public IDs exempt from the export gate")
-	if err := fs.Parse(rest); err != nil {
-		fmt.Fprintln(u.Err, "aiy warp install:", err)
-		return errs.CodeUsage
+	if handled, code := parseCmdFlags(u, fs, rest); handled {
+		return code
 	}
 	_ = yes
 	if platform == "" {
@@ -72,6 +71,13 @@ func cmdInstall(u *ui.UI, rest []string) int {
 		for _, f := range res.Skipped {
 			u.Warn("  ~ %s (drifted, needs --force)", f)
 		}
+		for _, n := range res.Notes {
+			u.Warn("  ! %s", n)
+		}
+		if res.Noop {
+			u.Info("Already in sync — nothing to do.")
+			return errs.CodeNoop
+		}
 		return errs.CodeOK
 	}
 
@@ -81,6 +87,9 @@ func cmdInstall(u *ui.UI, rest []string) int {
 	}
 	if len(res.Skipped) > 0 {
 		u.Warn("%d file(s) skipped (drifted) — run with --force to override, or 'aiy warp doctor opencode'", len(res.Skipped))
+	}
+	for _, n := range res.Notes {
+		u.Warn("  ! %s", n)
 	}
 	u.OK("Installed %d file(s), updated %d, %d in sync → %s",
 		len(res.Installed), len(res.Updated), res.Same, cfg.OpencodeDest())

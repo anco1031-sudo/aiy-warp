@@ -34,6 +34,7 @@ type InstallResult struct {
 	Same      int
 	Noop      bool // nothing to do (already in sync)
 	Warns     []redact.Finding
+	Notes     []string // informational (e.g. symlink replaced)
 }
 
 // Run executes the install. Returns errs.Secret (5) on credential values and
@@ -105,6 +106,7 @@ func RunInstall(o InstallOptions) (*InstallResult, error) {
 		}
 	}
 
+	res.Noop = len(res.Installed) == 0 && len(res.Updated) == 0 && len(res.Skipped) == 0
 	if o.DryRun {
 		return res, nil
 	}
@@ -113,6 +115,12 @@ func RunInstall(o InstallOptions) (*InstallResult, error) {
 		dest := destPath(o.DestDir, w.rel)
 		if err := os.MkdirAll(filepath.Dir(dest), 0o755); err != nil {
 			return nil, errs.Wrapf(err, "mkdir %s", filepath.Dir(dest))
+		}
+		if fi, err := os.Lstat(dest); err == nil && fi.Mode()&os.ModeSymlink != 0 {
+			res.Notes = append(res.Notes, "replaced symlink at "+w.rel)
+			if err := os.Remove(dest); err != nil {
+				return nil, errs.Wrapf(err, "remove symlink %s", dest)
+			}
 		}
 		if err := os.WriteFile(dest, []byte(w.content), 0o644); err != nil {
 			return nil, errs.Wrapf(err, "write %s", dest)
@@ -124,7 +132,6 @@ func RunInstall(o InstallOptions) (*InstallResult, error) {
 		return nil, errs.Wrapf(err, "write warp.lock")
 	}
 
-	res.Noop = len(res.Installed) == 0 && len(res.Updated) == 0 && len(res.Skipped) == 0
 	return res, nil
 }
 

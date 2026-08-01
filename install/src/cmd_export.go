@@ -25,9 +25,8 @@ func cmdExport(u *ui.UI, rest []string) int {
 	cfgPath := fs.String("config", "", "path to warp.config")
 	verbose := fs.Bool("verbose", false, "verbose output")
 	allowIDs := fs.String("allow-identifiers", "", "comma-separated public IDs exempt from the export gate")
-	if err := fs.Parse(rest); err != nil {
-		fmt.Fprintln(u.Err, "aiy warp export:", err)
-		return errs.CodeUsage
+	if handled, code := parseCmdFlags(u, fs, rest); handled {
+		return code
 	}
 	if *collapse && *noCollapse {
 		fmt.Fprintln(u.Err, "aiy warp: --collapse and --no-collapse are mutually exclusive")

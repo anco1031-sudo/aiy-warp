@@ -1,6 +1,8 @@
 package main
 
 import (
+	"errors"
+	"flag"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -62,7 +64,24 @@ var valueFlags = map[string]map[string]bool{
 	"install": {"agent": true, "team": true, "config": true, "allow-identifiers": true},
 	"export":  {"agent": true, "team": true, "out": true, "config": true, "allow-identifiers": true},
 	"doctor":  {"platform": true, "config": true},
-	"list":    {"platform": true},
+	"list":    {"platform": true, "config": true},
+}
+
+// parseCmdFlags parses fs against rest. On -h/--help it prints the command's
+// flags to u.Out and reports handled=true with exit code 0; on a parse error it
+// reports handled=true with exit code 2; on success handled=false.
+func parseCmdFlags(u *ui.UI, fs *flag.FlagSet, rest []string) (bool, int) {
+	if err := fs.Parse(rest); err != nil {
+		if errors.Is(err, flag.ErrHelp) {
+			fmt.Fprintf(u.Out, "aiy warp %s\nUsage: aiy warp %s [flags]\n\nFlags:\n", fs.Name(), fs.Name())
+			fs.SetOutput(u.Out)
+			fs.PrintDefaults()
+			return true, errs.CodeOK
+		}
+		fmt.Fprintln(u.Err, "aiy warp "+fs.Name()+":", err)
+		return true, errs.CodeUsage
+	}
+	return false, 0
 }
 
 // extractPlatform removes the first bare (non-flag) token from argv and

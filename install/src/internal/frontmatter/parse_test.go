@@ -86,3 +86,65 @@ func TestLaterDelimiterIsBody(t *testing.T) {
 		t.Fatalf("body must keep later delimiters: %q", body)
 	}
 }
+
+func TestClosingDelimiterTrailingSpacePreservesBody(t *testing.T) {
+	content := "---\ndescription: \"X (เอ็กซ์) — test\"\n--- \nBODY LINE"
+	fm, body, err := SplitFrontmatter(content)
+	if err != nil {
+		t.Fatalf("trailing-space closing must not error: %v", err)
+	}
+	if !strings.Contains(fm, "description") {
+		t.Fatalf("fm = %q", fm)
+	}
+	if body != "BODY LINE" {
+		t.Fatalf("body must be preserved with trailing-space closing, got %q", body)
+	}
+}
+
+func TestClosingDelimiterTrailingTabPreservesBody(t *testing.T) {
+	content := "---\ndescription: x\n---\t\nBODY"
+	fm, body, err := SplitFrontmatter(content)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(fm, "description: x") {
+		t.Fatalf("fm = %q", fm)
+	}
+	if body != "BODY" {
+		t.Fatalf("body = %q, want BODY", body)
+	}
+}
+
+func TestCRLFFrontmatterParses(t *testing.T) {
+	content := "---\r\ndescription: \"X (เอ็กซ์) — test\"\r\nmode: subagent\r\n---\r\nBODY LINE\r\n"
+	fm, body, err := SplitFrontmatter(content)
+	if err != nil {
+		t.Fatalf("CRLF file must parse: %v", err)
+	}
+	if !strings.Contains(fm, "mode: subagent") {
+		t.Fatalf("CRLF frontmatter not parsed: %q", fm)
+	}
+	if body != "BODY LINE\r\n" {
+		t.Fatalf("CRLF body = %q, want %q", body, "BODY LINE\r\n")
+	}
+	a, err := ParseAgent("agents/x.md", content)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if a.Mode != "subagent" || a.Description == "" {
+		t.Fatalf("CRLF agent fields not parsed: %+v", a)
+	}
+}
+
+func TestMalformedDelimiterIsErrorNotTruncation(t *testing.T) {
+	// A `----` line inside frontmatter must error, never silently drop the body.
+	content := "---\ndescription: \"X (เอ็กซ์) — test\"\n----\nmode: subagent\n---\nBODY LINE\n"
+	if _, _, err := SplitFrontmatter(content); err == nil {
+		t.Fatal("`----` inside frontmatter must return an error")
+	}
+	// A closing `---` followed by content is malformed too.
+	bad := "---\ndescription: x\n--- extra\nBODY"
+	if _, _, err := SplitFrontmatter(bad); err == nil {
+		t.Fatal("closing `--- extra` must return an error")
+	}
+}

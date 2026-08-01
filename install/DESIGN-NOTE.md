@@ -129,7 +129,7 @@ skills:
 | kwan | head | trading | aiy | trading-pipeline |
 | fon, june, bee, nam | executor | trading | kwan | — |
 
-**Bundle semantics** (§4.2): `--agent aiy` → `agents/aiy.md` + its owned skills. `--team tech` → lin+an+pao+mint+fah+cloud + dept skills (none for tech). No selector → full kit (18 agents + 5 skills + 3 templates + 3 playbooks).
+**Bundle semantics** (§4.2): `--agent aiy` → `agents/aiy.md` + its owned skills. `--team tech` → lin+an+pao+mint+fah+cloud + dept skills (none for tech). No selector → full kit (18 agents + 5 skills + 4 templates + 3 playbooks).
 
 ---
 

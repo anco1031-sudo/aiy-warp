@@ -11,6 +11,7 @@ func TestBlocksFakeSecrets(t *testing.T) {
 	cases := map[string]string{
 		"prefix":     "the api key is sk-test-abcdefghijklmnop123456789",
 		"pem":        "-----BEGIN RSA PRIVATE KEY-----\nMIIEowIBAAKCAQEA",
+		"pgp-block":  "-----BEGIN PGP PRIVATE KEY BLOCK-----\nMIIEowIBAAKCAQEA",
 		"jwt":        "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.dozjgNryP4J3jVmNHl0w5N_XgL0n3I9PlFUP0THsR8U",
 		"assignment": "token: supersecretvalue1234567890",
 		"ghp":        "ghp_abcdefghijklmnopqrstuvwxyz123456",
@@ -62,10 +63,68 @@ func TestAllowIDsExempts(t *testing.T) {
 }
 
 func TestShortNumericIDIgnored(t *testing.T) {
-	// Telegram chat IDs (<15 digits) are P1 parameterization debt, not gate items.
-	rep := Scan(map[string]string{"x": "chat 852106923"}, nil)
+	// Numbers shorter than 9 digits are not identifiers and must not trip the
+	// export gate. 9-13 digit numbers are Telegram-class identifiers by design
+	// (DESIGN-NOTE §2, fail-closed: phones included; --allow-identifiers is the
+	// override).
+	rep := Scan(map[string]string{"x": "date 20260801 counter 123456"}, nil)
 	if len(rep.Exports) != 0 {
-		t.Fatalf("9-digit ID must not trip the export gate in P0: %+v", rep.Exports)
+		t.Fatalf("short numbers must not trip the export gate: %+v", rep.Exports)
+	}
+}
+
+func TestTelegramIDExportBlock(t *testing.T) {
+	// DESIGN-NOTE §2: Telegram identifiers are export-gated (9-13 digits,
+	// optional -100 prefix) — unlike short numbers they are host-routing IDs.
+	cases := map[string]string{
+		"plain chat":    "chat 852106923",
+		"supergroup":    "supergroup -1001234567890",
+		"in flags":      "--chat_id 852106923",
+		"negative chat": "chat -123456789",
+		"backtick":      "`852106923`",
+		"adjacent word": "id=852106923",
+	}
+	for name, content := range cases {
+		rep := Scan(map[string]string{"x": content}, nil)
+		if len(rep.Exports) != 1 {
+			t.Errorf("%s (%q): expected 1 export finding, got %d (%+v)", name, content, len(rep.Exports), rep.Exports)
+		}
+		if rep.HasBlocks() {
+			t.Errorf("%s: Telegram IDs must not hard-block install", name)
+		}
+	}
+	// Allowlist exemption must work for the raw ID (plain and -100 prefixed).
+	for _, id := range []string{"852106923", "-1001234567890"} {
+		rep := Scan(map[string]string{"x": "chat " + id}, map[string]bool{id: true})
+		if len(rep.Exports) != 0 {
+			t.Fatalf("allowlisted Telegram ID %s must be exempt: %+v", id, rep.Exports)
+		}
+	}
+}
+
+func TestLongIDNotPartiallyMatchedAsTelegram(t *testing.T) {
+	// A 15+ digit number is a long-numeric-id finding, never a partial
+	// telegram match — must not double-report or mis-classify.
+	rep := Scan(map[string]string{"x": "snowflake 1527698229347487904"}, nil)
+	if len(rep.Exports) != 1 || rep.Exports[0].Pattern != "long-numeric-id" {
+		t.Fatalf("expected 1 long-numeric-id finding, got %+v", rep.Exports)
+	}
+}
+
+func TestAssignmentInURLIsWarnNotBlock(t *testing.T) {
+	content := "See https://example.com/auth?api_key=abcdefghijklmnop123456 for details"
+	rep := Scan(map[string]string{"docs/guide.md": content}, nil)
+	if rep.HasBlocks() {
+		t.Fatalf("query-string assignment must not hard-block: %+v", rep.Blocks)
+	}
+	found := false
+	for _, w := range rep.Warns {
+		if w.Pattern == "secret-assignment-in-url" {
+			found = true
+		}
+	}
+	if !found {
+		t.Fatalf("expected a secret-assignment-in-url warn, got %+v", rep.Warns)
 	}
 }
 

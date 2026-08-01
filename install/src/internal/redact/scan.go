@@ -64,8 +64,9 @@ func uniqueFiles(fs []Finding) []string {
 }
 
 var (
-	// Hard-block: PEM/OpenSSH private key blocks.
-	pemRE = regexp.MustCompile(`-----BEGIN [A-Z0-9 ]*(PRIVATE|EC|RSA|OPENSSH|DSA|PGP)[ A-Z0-9]*KEY-----`)
+	// Hard-block: PEM/OpenSSH private key blocks. The optional " BLOCK" suffix
+	// covers armored PGP keys ("-----BEGIN PGP PRIVATE KEY BLOCK-----").
+	pemRE = regexp.MustCompile(`-----BEGIN [A-Z0-9 ]*(PRIVATE|EC|RSA|OPENSSH|DSA|PGP)[ A-Z0-9]*KEY(?: BLOCK)?-----`)
 
 	// Hard-block: well-known credential prefixes.
 	prefixRE = regexp.MustCompile(`(?i)\b(sk-[A-Za-z0-9_-]{8,}|sk-ant-[A-Za-z0-9_-]{16,}|ghp_[A-Za-z0-9]{20,}|gho_[A-Za-z0-9]{20,}|xox[baprs]-[A-Za-z0-9-]{10,}|glpat-[A-Za-z0-9_-]{16,}|rk_live_[A-Za-z0-9]{16,}|ya29\.[A-Za-z0-9_-]{20,}|AIza[0-9A-Za-z_-]{30,}|AKIA[0-9A-Z]{16})\b`)
@@ -78,6 +79,12 @@ var (
 
 	// Export-only: long numeric identifiers (Discord snowflakes, etc.).
 	longIDRE = regexp.MustCompile(`\b\d{15,}\b`)
+
+	// Export-only: Telegram chat/supergroup identifiers — 9-13 digits with an
+	// optional -100 prefix (DESIGN-NOTE §2 contract). Boundary chars are
+	// consumed so a longer number is never partially matched; the ID itself is
+	// captured in group 1 for allowlist comparison.
+	telegramRE = regexp.MustCompile(`(?:^|[^0-9])((?:-100)?\d{9,13})(?:[^0-9]|$)`)
 
 	// Warn: prose references to credential concepts.
 	refRE = regexp.MustCompile(`(?i)\b(api[_-]?key|apikey|client[_-]?secret|password|(?:bot|api|access|auth|page|user|discord|telegram|facebook)[- ]?token)\b`)
@@ -130,16 +137,26 @@ func looksOpaque(v string) bool {
 }
 
 // assignValue returns the captured assignment value if it looks like a real
-// credential, otherwise "".
-func assignValue(line string) string {
-	m := assignRE.FindStringSubmatch(line)
-	if len(m) != 3 {
-		return ""
+// credential, otherwise "" and the match start (or -1 when not applicable).
+func assignValue(line string) (string, int) {
+	m := assignRE.FindStringSubmatchIndex(line)
+	if len(m) != 6 {
+		return "", -1
 	}
-	if looksOpaque(m[2]) {
-		return m[2]
+	val := line[m[4]:m[5]]
+	if looksOpaque(val) {
+		return val, m[0]
 	}
-	return ""
+	return "", -1
+}
+
+// isQueryContext reports whether an assignment at byte offset start sits in a
+// URL query string (e.g. "https://example.com/auth?api_key=..."). Such values
+// are documentation references, not credentials.
+func isQueryContext(line string, start int) bool {
+	prefix := strings.TrimRight(line[:start], " \t")
+	return strings.Contains(prefix, "://") ||
+		strings.HasSuffix(prefix, "?") || strings.HasSuffix(prefix, "&")
 }
 
 // Scan inspects file contents (relpath → content) and returns a Report.
@@ -166,11 +183,21 @@ func Scan(files map[string]string, allow map[string]bool) Report {
 			if m := jwtRE.FindString(line); m != "" {
 				rep.Blocks = append(rep.Blocks, Finding{File: path, Line: n, Kind: KindBlock, Pattern: "jwt", Match: clip(m)})
 			}
-			if m := assignValue(line); m != "" {
-				rep.Blocks = append(rep.Blocks, Finding{File: path, Line: n, Kind: KindBlock, Pattern: "secret-assignment", Match: clip(m)})
+			if val, start := assignValue(line); val != "" {
+				f := Finding{File: path, Line: n, Kind: KindBlock, Pattern: "secret-assignment", Match: clip(val)}
+				if isQueryContext(line, start) {
+					f.Kind = KindWarn
+					f.Pattern = "secret-assignment-in-url"
+					rep.Warns = append(rep.Warns, f)
+				} else {
+					rep.Blocks = append(rep.Blocks, f)
+				}
 			}
 			if m := longIDRE.FindString(line); m != "" && !allow[m] {
 				rep.Exports = append(rep.Exports, Finding{File: path, Line: n, Kind: KindExport, Pattern: "long-numeric-id", Match: m})
+			}
+			if sm := telegramRE.FindStringSubmatch(line); sm != nil && !allow[sm[1]] {
+				rep.Exports = append(rep.Exports, Finding{File: path, Line: n, Kind: KindExport, Pattern: "telegram-id", Match: sm[1]})
 			}
 			if m := refRE.FindString(line); m != "" {
 				rep.Warns = append(rep.Warns, Finding{File: path, Line: n, Kind: KindWarn, Pattern: "credential-reference", Match: clip(m)})

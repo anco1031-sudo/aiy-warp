@@ -31,22 +31,48 @@ type Agent struct {
 
 // SplitFrontmatter returns the frontmatter YAML and body of a `---`-delimited
 // markdown file. Files without a leading `---` yield empty frontmatter and the
-// full content as body. The FIRST closing `---` terminates the block (a later
-// `---` is body content, e.g. a horizontal rule).
+// full content as body. The FIRST line that is exactly `---` (trailing spaces
+// or tabs allowed; LF and CRLF both supported) terminates the block; a later
+// `---` is body content, e.g. a horizontal rule.
+//
+// Malformed delimiters are errors, never silent truncation: a line starting
+// with `---` that is not an exact closing marker (e.g. `----` or `--- x`)
+// returns an error instead of dropping the body.
 func SplitFrontmatter(content string) (fm, body string, err error) {
-	if !strings.HasPrefix(content, "---\n") {
+	var eol string
+	switch {
+	case strings.HasPrefix(content, "---\r\n"):
+		eol = "\r\n"
+	case strings.HasPrefix(content, "---\n"):
+		eol = "\n"
+	default:
 		return "", content, nil
 	}
-	idx := strings.Index(content[4:], "\n---")
-	if idx < 0 {
-		return "", "", fmt.Errorf("unterminated frontmatter: missing closing '---'")
+	start := len("---") + len(eol)
+
+	i := start
+	for i < len(content) {
+		lineEnd := len(content)
+		if nl := strings.Index(content[i:], eol); nl >= 0 {
+			lineEnd = i + nl
+		}
+		line := strings.TrimRight(content[i:lineEnd], " \t\r")
+		if line == "---" {
+			fm = content[start:i]
+			if lineEnd == len(content) {
+				return fm, "", nil
+			}
+			return fm, content[lineEnd+len(eol):], nil
+		}
+		if strings.HasPrefix(line, "---") {
+			return "", "", fmt.Errorf("malformed frontmatter: line %q looks like a closing '---' but is not", line)
+		}
+		if lineEnd == len(content) {
+			break
+		}
+		i = lineEnd + len(eol)
 	}
-	idx += 4 // absolute index of the '\n' that opens the closing '---'
-	fm = content[4:idx]
-	if idx+4 < len(content) && content[idx+4] == '\n' {
-		body = content[idx+5:]
-	}
-	return fm, body, nil
+	return "", "", fmt.Errorf("unterminated frontmatter: missing closing '---'")
 }
 
 // ParseAgent parses an agent file at repo-relative path relPath.

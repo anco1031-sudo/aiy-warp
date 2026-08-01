@@ -19,9 +19,8 @@ func cmdDoctor(u *ui.UI, rest []string) int {
 	jsonOut := fs.Bool("json", false, "machine-readable JSON report")
 	cfgPath := fs.String("config", "", "path to warp.config")
 	verbose := fs.Bool("verbose", false, "verbose output")
-	if err := fs.Parse(rest); err != nil {
-		fmt.Fprintln(u.Err, "aiy warp doctor:", err)
-		return errs.CodeUsage
+	if handled, code := parseCmdFlags(u, fs, rest); handled {
+		return code
 	}
 	p := *platformFlag
 	if platform != "" {
