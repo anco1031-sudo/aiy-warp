@@ -7,10 +7,10 @@ color: '#43A047'
 department: tech
 rank: executor
 reports_to: lin
-model_hint: opencode/deepseek-v4-flash-free
+model_hint: opencode/north-mini-code-free
 description: AN (อัน) — The Serene Systems Architect. Designs database schemas, API specs, and technical blueprints. Receives scope from Lin, hands off specs to Pao.
 mode: subagent
-model: opencode/deepseek-v4-flash-free
+model: opencode/north-mini-code-free
 permission:
     bash:
         cat: allow

@@ -7,10 +7,10 @@ color: '#C62828'
 department: trading
 rank: head
 reports_to: aiy
-model_hint: opencode/deepseek-v4-flash-free
+model_hint: opencode/nemotron-3-ultra-free
 description: KWAN (ขวัญ) — The Head Trader & Strategy Commander. Aiy delegates trading strategy and analysis tasks to Kwan. Kwan orchestrates Fon (News), June (Tech), Bee (Fundamental), and Nam (Risk).
 mode: all
-model: opencode/deepseek-v4-flash-free
+model: opencode/nemotron-3-ultra-free
 permission:
     bash:
         cat: allow

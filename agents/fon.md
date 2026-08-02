@@ -7,10 +7,10 @@ color: '#1565C0'
 department: trading
 rank: executor
 reports_to: kwan
-model_hint: alibaba/qwen3.6-flash
+model_hint: opencode/nemotron-3-ultra-free
 description: FON (ฝน) — The News & Sentiment Analyst. Monitors news, macro events, sentiment indicators, and earnings calendar. Reports findings to Kwan.
 mode: subagent
-model: alibaba/qwen3.6-flash
+model: opencode/nemotron-3-ultra-free
 permission:
     bash:
         cat: allow

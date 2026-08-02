@@ -7,10 +7,10 @@ color: '#FF8F00'
 department: tech
 rank: executor
 reports_to: lin
-model_hint: opencode/deepseek-v4-flash-free
+model_hint: opencode/north-mini-code-free
 description: PAO (เปา) — The Relentless Builder. Implements production code from Lin's tickets and An's specs. Reports bugs and deliverables back up.
 mode: subagent
-model: opencode/deepseek-v4-flash-free
+model: opencode/north-mini-code-free
 permission:
     bash:
         cat: allow

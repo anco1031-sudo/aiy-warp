@@ -7,10 +7,10 @@ color: '#8E24AA'
 department: content
 rank: head
 reports_to: aiy
-model_hint: opencode/deepseek-v4-flash-free
+model_hint: opencode/ling-3.0-flash-free
 description: CHER (เฌอ) — The Master Editor & Copywriter. Head of Content/Creative Pipeline. Manages Ploy (Narrative) and Jewel (Multimedia). Aiy delegates content tasks here.
 mode: all
-model: opencode/deepseek-v4-flash-free
+model: opencode/ling-3.0-flash-free
 permission:
     bash:
         cat: allow

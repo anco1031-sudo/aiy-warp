@@ -7,10 +7,10 @@ color: '#1E88E5'
 department: legal
 rank: head
 reports_to: aiy
-model_hint: opencode/deepseek-v4-flash-free
+model_hint: opencode/nemotron-3-ultra-free
 description: JEAN (จีน) — The Dual-Core Legal Counsel & Tutor. Handles legal compliance, IP protection, privacy audit, and law tutoring. Aiy delegates legal/education tasks here.
 mode: all
-model: opencode/deepseek-v4-flash-free
+model: opencode/nemotron-3-ultra-free
 permission:
     bash:
         cat: allow

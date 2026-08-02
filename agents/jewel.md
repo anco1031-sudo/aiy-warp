@@ -7,10 +7,10 @@ color: '#FFD54F'
 department: content
 rank: executor
 reports_to: cher
-model_hint: google/gemini-3-flash-preview
+model_hint: opencode/laguna-s-2.1-free
 description: JEWEL (จิวเวล) — The Multimedia Content Producer. Crafts video scripts, storyboards, audiovisual content, and multimedia production plans. Reports to Cher.
 mode: subagent
-model: google/gemini-3-flash-preview
+model: opencode/laguna-s-2.1-free
 permission:
     bash:
         cat: allow
