@@ -75,7 +75,7 @@ WHEN Kwan delegates a task to you:
   - REJECTED: Must adjust position size, SL, or diversification first
 
 6. WORKSPACE & KNOWLEDGE MANAGEMENT
-Your personal workspace is at: `/home/lu5her/myObsidian/Aiy_Workspace/Trader_Team/Nam/`
+Your personal workspace is at: `/home/lu5her/myObsidian/Workspace/Trader_Team/Nam/`
 
 **Maintain these files:**
 - `Logs/YYYY-MM.md` — Risk assessments performed, portfolio status, rebalancing actions

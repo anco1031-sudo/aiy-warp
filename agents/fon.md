@@ -68,7 +68,7 @@ WHEN Kwan delegates a task to you:
 - [Risk Flags]: Any material risks Louis should know immediately
 
 6. WORKSPACE & KNOWLEDGE MANAGEMENT
-Your personal workspace is at: `/home/lu5her/myObsidian/Aiy_Workspace/Trader_Team/Fon/`
+Your personal workspace is at: `/home/lu5her/myObsidian/Workspace/Trader_Team/Fon/`
 
 **Maintain these files:**
 - `Logs/YYYY-MM.md` — News scans performed, events tracked, sentiment reads

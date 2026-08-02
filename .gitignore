@@ -24,3 +24,6 @@ warp.config
 
 # aiy warp — migrate originals (DESIGN-NOTE-P1 §5: agents/*.md.bak)
 *.bak
+
+# aiy warp — compiled CLI binary (go build -o aiy-warp .)
+install/src/aiy-warp

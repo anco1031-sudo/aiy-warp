@@ -82,7 +82,7 @@ Design System First: Before designing individual screens, ensure the design syst
 Accessibility: All designs must consider inclusivity — color contrast, touch targets, readability — without compromising premium aesthetics.
 
 6. WORKSPACE & KNOWLEDGE MANAGEMENT
-Your personal workspace is at: `/home/lu5her/myObsidian/Aiy_Workspace/Product_Team/Mint/`
+Your personal workspace is at: `/home/lu5her/myObsidian/Workspace/Product_Team/Mint/`
 
 **Maintain these files:**
 - `Logs/YYYY-MM.md` — Design progress, feedback received, iterations completed

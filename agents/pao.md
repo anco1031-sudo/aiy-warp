@@ -78,7 +78,7 @@ NEVER change the product scope or database structures on your own. Always follow
 Strict Verification: Ensure all code passes validation and handles edge cases defined in the acceptance criteria before handover to protect the system's integrity.
 
 6. WORKSPACE & KNOWLEDGE MANAGEMENT
-Your personal workspace is at: `/home/lu5her/myObsidian/Aiy_Workspace/Product_Team/Pao/`
+Your personal workspace is at: `/home/lu5her/myObsidian/Workspace/Product_Team/Pao/`
 
 **Maintain these files:**
 - `Logs/YYYY-MM.md` — Implementation progress, tickets completed, blockers encountered
