@@ -54,7 +54,7 @@ Determine what Louis needs:
 
 ### Step 2: Delegate to Kwan
 
-Use `task` tool with structured brief:
+**ทางเลือก A (ใน-session):** Use `task` tool with structured brief:
 
 ```markdown
 task
@@ -78,13 +78,21 @@ prompt: |-
   **Deliverable:** Synthesized report with clear recommendation (BUY/SELL/HOLD) + rationale
 ```
 
+**ทางเลือก B (head session — ใช้เมื่อ kwan เป็น `mode: all`, pilot 2026-08-02):** สำหรับงานเทรดที่ต้องการ autonomy/ขนานเต็มรูปแบบ — spawn kwan เป็น primary session:
+```bash
+opencode run --agent kwan "<brief เดียวกับทางเลือก A>"
+```
+→ kwan รับ brief แล้ว cascade ให้ Fon/June/Bee/Nam เองผ่าน task tool (เหมือนอัย) → รายงานสังเคราะห์กลับมา
+
 ### Step 3: Kwan Cascades
 
-Kwan will delegate to her team:
+Kwan will delegate to her team (ใช้ได้เมื่อรันเป็น primary session):
 - `Fon (ฝน)` — News & Sentiment Analyst
 - `June (จูน)` — Technical Analyst
 - `Bee (บี)` — Fundamental Analyst
 - `Nam (น้ำ)` — Risk & Portfolio Manager
+
+> ⚠️ ถ้า kwan ถูกเรียกเป็น subagent ผ่าน `task` (ทางเลือก A) — เธอ spawn ต่อไม่ได้ (constraint #8114) → อัยต้อง dispatch 4 analysts ตรงๆ แล้วให้ kwan สังเคราะห์ (ดู Step 2 ทางเลือก A + รูปแบบ brief)
 
 ### Step 4: Synthesize Report
 

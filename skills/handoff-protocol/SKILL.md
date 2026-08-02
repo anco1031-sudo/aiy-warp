@@ -61,14 +61,15 @@ Sections: 📌 สิ่งที่ส่งต่อ · ✅ เสร็จแ
 
 ## 🌍 Portability
 
-- **opencode:** Aiy dispatch ผ่าน `task` tool (brief decision-complete)
+- **opencode:** Aiy dispatch ผ่าน `task` tool (brief decision-complete) หรือ spawn head session (`opencode run --agent <head>`) สำหรับงานที่ต้องการ autonomy ทั้ง department
 - **Web chat (ChatGPT/Gemini/web):** paste ใบงานเป็น markdown block — คนอ่านคนเดียวก็ทำตาม checklist ได้
 - **ทุก platform:** ใช้ template เดียวกัน → หน้าตาใบงานเหมือนกันหมด
 
 ## ⚠️ Rules
 
-1. **Aiy เท่านั้น** dispatch งาน (nested delegation เปิดไม่ได้ — ทุกคนส่งกลับมาให้ Aiy)
-2. **Head ไม่ spawn งานเอง** — เป็น reviewer gate
-3. **`--dry-run` ก่อน destructive ops** — ใช้กับงานที่แตะของจริง
-4. **Sandbox HOME เสมอ** ตอนทดสอบ — ห้ามแตะ `~/.config/` จริง
-5. **Respect redaction gate** (exit 5) — ไม่ bypass `--allow-identifiers` เว้น Louis อนุญาต
+1. **คุย ≠ ส่งงาน (Aiy ↔ Head Protocol 2026-08-02):** คุย/สอบถาม/ติดตาม → `task` + `task_id` (subagent — ส่งต่อไม่ได้ ไม่จำเป็นต้องใช้) · **งานจริงที่ต้องใช้ทีม → `opencode run --agent <head> "brief"`** (primary — หัวหน้า cascade ลูกทีมเองได้) · window `<head>` ใช้สำหรับหลุยส์ดูสด/คุยเองเท่านั้น (ห้าม script ส่ง keys เข้า TUI)
+2. **Executor (ลูกทีม) เป็น leaf worker** — spawn งานต่อไม่ได้ (subagent constraint, opencode #8114) — ถ้างานต้อง cascade ให้ส่งผ่าน head
+3. **Work order ต้อง decision-complete** — strategic intent, scope, deliverables, acceptance criteria — หัวหน้าไม่ต้องเดา
+4. **`--dry-run` ก่อน destructive ops** — ใช้กับงานที่แตะของจริง
+5. **Sandbox HOME เสมอ** ตอนทดสอบ — ห้ามแตะ `~/.config/` จริง
+6. **Respect redaction gate** (exit 5) — ไม่ bypass `--allow-identifiers` เว้น Louis อนุญาต
