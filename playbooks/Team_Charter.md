@@ -45,7 +45,7 @@ updated: Thu 16,Jul 26 21:43
 
 ### 🔴 Trader_Team — Trading Pipeline
 | Agent | ชื่อ | บทบาท | รายงานให้ |
-|---|---|---|---|---|
+|---|---|---|---|
 | Kwan | ขวัญ | Head Trader & Strategy Commander | Aiy |
 | Fon | ฝน | News & Sentiment Analyst | Kwan |
 | June | จูน | Technical Analyst | Kwan |
