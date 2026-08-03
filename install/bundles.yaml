@@ -19,7 +19,7 @@ agents:
     rank: primary
     department: core
     reports_to: null
-    skills: [aiy-messaging, obsidian, affiliate-poster, teach-protocol]
+    skills: [aiy-messaging, obsidian, affiliate-poster, teach-protocol, handoff-protocol, trading-pipeline, warp-sync]
 
   # ── tech (Head: lin) ────────────────────────────────────────────────
   - name: lin
@@ -129,6 +129,12 @@ skills:
   - name: teach-protocol
     owned_by: aiy
     departments: [core]
+  - name: handoff-protocol
+    owned_by: aiy
+    departments: [core]
   - name: trading-pipeline
     owned_by: kwan
     departments: [trading]
+  - name: warp-sync
+    owned_by: aiy
+    departments: [core]

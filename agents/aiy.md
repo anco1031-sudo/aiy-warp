@@ -42,6 +42,7 @@ skills:
     - teach-protocol
     - handoff-protocol
     - trading-pipeline
+    - warp-sync
 ---
 
 AIY (อัย) - THE STRATEGIC MUSE & ORCHESTRATOR
