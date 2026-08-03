@@ -11,10 +11,10 @@ Work-order (ใบงาน) workflow มาตรฐานเดียว: ส�
 
 | Resource | Path |
 |----------|------|
-| Template (ต้นแบบใบงาน) | `Aiy_Workspace/CoWorkspace/Meta/Template_Handoff.md` |
-| ใบงานที่ส่งแล้ว | `Aiy_Workspace/CoWorkspace/Handoff/YYYY/MM/DD/Handoff-{from}-{to}-{topic}.md` |
-| ประกาศทีม | `Aiy_Workspace/CoWorkspace/Messages/YYYY/MM/DD/Chat.md` |
-| Knowledge อ้างอิง | `Aiy_Workspace/Aiy/Knowledge/Knowledge-Handoff-Standard.md` |
+| Template (ต้นแบบใบงาน) | `Workspace/CoWorkspace/Meta/Template_Handoff.md` |
+| ใบงานที่ส่งแล้ว | `Workspace/CoWorkspace/Handoff/YYYY/MM/DD/Handoff-{from}-{to}-{topic}.md` |
+| ประกาศทีม | `Workspace/CoWorkspace/Messages/YYYY/MM/DD/Chat.md` |
+| Knowledge อ้างอิง | `Workspace/Aiy/Knowledge/Knowledge-Handoff-Standard.md` |
 
 ## 🔄 Workflow (5 ขั้น)
 
@@ -64,6 +64,25 @@ Sections: 📌 สิ่งที่ส่งต่อ · ✅ เสร็จแ
 - **opencode:** Aiy dispatch ผ่าน `task` tool (brief decision-complete) หรือ spawn head session (`opencode run --agent <head>`) สำหรับงานที่ต้องการ autonomy ทั้ง department
 - **Web chat (ChatGPT/Gemini/web):** paste ใบงานเป็น markdown block — คนอ่านคนเดียวก็ทำตาม checklist ได้
 - **ทุก platform:** ใช้ template เดียวกัน → หน้าตาใบงานเหมือนกันหมด
+
+## 🪟 Tmux Window Dispatch (lessons 03-Aug-26)
+
+**เมื่อเปิด window ใหม่ส่งงานให้ head (`tmux new-window -t aiy -n <head>`):**
+
+1. **สั่ง opencode แบบเปล่า ไม่มี argument** — `clear && opencode --agent <head>` (กด Enter)
+2. **รอให้ TUI โหลดเสร็จ** (เห็น prompt "Ask anything...") แล้วค่อยส่งงาน
+3. **ส่ง prompt เป็น ASCII ล้วน + ชี้ path ใบงาน** — ห้าม Thai/emoji/space ใน command line (quote พัง → opencode ตีความ brief เป็น directory → fail ตั้งแต่เริ่ม)
+   ```bash
+   tmux send-keys -t "aiy:<head>.1" "Read the handoff brief at /path/to/Handoff-xxx.md then execute it per that brief. Start now." Enter
+   ```
+4. **Monitor งาน** — capture-pane ดูความคืบหน้า + รอ completion marker (ไฟล์ touch) / commit
+
+**ปิด window แบบ graceful (งานเสร็จแล้ว):**
+
+1. `tmux send-keys -t "aiy:<head>.1" "/exit" Enter` — **ต้องกด Enter ตาม!** (/exit ค้างใน input ถ้าไม่ Enter)
+2. รอ pane กลับเป็น shell (เช็ค `tmux list-panes` → command เปลี่ยนจาก opencode เป็น zsh)
+3. `tmux kill-window -t aiy:<head>` — session save อัตโนมัติแล้ว ไม่ต้องกังวล
+4. **⚠️ งานเสร็จ → ถาม Louis เรื่อง window นั้นก่อนปิดเสมอ** (Louis สั่ง 03-Aug-26): อย่าปิดเองโดยไม่ถาม — "ปิด window cher ไหม?"
 
 ## ⚠️ Rules
 

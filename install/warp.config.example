@@ -13,7 +13,7 @@ version: 1
 paths:
   home: /home/lu5her                # {{HOME}}
   workspace: /home/lu5her/01-Projects/aiy-warp   # {{WARP_WORKSPACE}}
-  obsidian_root: /home/lu5her/myObsidian/Aiy_Workspace   # {{OBSIDIAN_ROOT}}
+  obsidian_root: /home/lu5her/myObsidian/Workspace   # {{OBSIDIAN_ROOT}}
 
 # Platform destinations (opencode is P0; others land in P1/P2)
 platforms:

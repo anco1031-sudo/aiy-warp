@@ -10,10 +10,14 @@ description: "Universal Obsidian vault operations — standard CRUD, frontmatter
 ## 📍 Vault Location
 
 ```
-VAULT_ROOT = /home/lu5her/myObsidian/Aiy_Workspace
+VAULT_ROOT   = /home/lu5her/myObsidian            # Obsidian vault root (PARA + 04_Archives)
+WORKSPACE    = /home/lu5her/myObsidian/Workspace  # ทีมเวิร์กสเปซรวมของทุกคน (Aiy + ทุกทีม)
 ```
 
-**หมายเหตุ:** ปัจจุบัน vault ถูก mount แยกเป็น `Aiy_Workspace/` — ถ้ามีการ sync หรือย้าย paths ในอนาคต ให้อัปเดตที่ `Knowledge-Obsidian-Vault.md` และแจ้ง Aiy
+**หมายเหตุ:** `Workspace/` คือพื้นที่ทำงานรวมของทุกทีม (rename จาก `Aiy_Workspace/` เมื่อ 02-Aug-26) — **ทุก agent เขียน Logs/Knowledge/Handoff ใต้ `Workspace/{Team}/{Name}/` เสมอ**
+- ถ้าใช้ Obsidian MCP (`vault_write`/`vault_append`/`vault_patch`) → path ขึ้นต้น `Workspace/` (MCP relative กับ vault root)
+- ห้ามเขียน path แบบ vault-relative ตรงๆ (`Aiy/Logs/...`, `Product_Team/Lin/Logs/...`) — นั่นคือ vault root ไม่ใช่ workspace
+- ถ้ามีการ sync หรือย้าย paths ในอนาคต ให้อัปเดตที่ `Knowledge-Obsidian-Vault.md` และแจ้ง Aiy
 
 ---
 
@@ -33,7 +37,7 @@ VAULT_ROOT = /home/lu5her/myObsidian/Aiy_Workspace
 ## 📁 Vault Structure — มาตรฐาน
 
 ```
-Aiy_Workspace/
+Workspace/
 ├── Aiy/                       # Aiy's personal workspace
 │   ├── Handoff/               # Session handoff files
 │   ├── Integrations/          # Integration notes
@@ -362,7 +366,7 @@ Dashboard.md ใช้ Dataview — agents สามารถอ้างอิ�
 
 ```dataview
 TABLE created AS "Date", author AS "Agent"
-FROM "Aiy_Workspace"
+FROM "Workspace"
 WHERE contains(file.path, "/Logs/")
 SORT file.name DESC
 LIMIT 10
@@ -370,7 +374,7 @@ LIMIT 10
 
 ```dataview
 TABLE created AS "Date" 
-FROM "Aiy_Workspace"
+FROM "Workspace"
 WHERE contains(file.path, "/Knowledge/") AND !contains(file.path, "Knowledge_base")
 SORT file.ctime DESC
 LIMIT 10
@@ -384,22 +388,22 @@ LIMIT 10
 
 ```bash
 # ค้นหาไฟล์
-glob pattern="**/*Keyword*.md" path="/home/lu5her/myObsidian/Aiy_Workspace"
+glob pattern="**/*Keyword*.md" path="/home/lu5her/myObsidian/Workspace"
 
 # ค้นหาเนื้อหา
-grep pattern="keyword" include="*.md" path="/home/lu5her/myObsidian/Aiy_Workspace"
+grep pattern="keyword" include="*.md" path="/home/lu5her/myObsidian/Workspace"
 
 # ค้นหาจาก tag ใน frontmatter
-grep pattern="tags:.*trading" include="*.md" path="/home/lu5her/myObsidian/Aiy_Workspace"
+grep pattern="tags:.*trading" include="*.md" path="/home/lu5her/myObsidian/Workspace"
 
 # ดู team structure
-read filePath="/home/lu5her/myObsidian/Aiy_Workspace"
+read filePath="/home/lu5her/myObsidian/Workspace"
 
 # อ่าน template
-read filePath="/home/lu5her/myObsidian/Aiy_Workspace/Meta/Template_Knowledge.md"
+read filePath="/home/lu5her/myObsidian/Workspace/Meta/Template_Knowledge.md"
 
 # ตรวจสอบ frontmatter (บรรทัดแรก)
-read filePath="/home/lu5her/myObsidian/Aiy_Workspace/{path}/file.md" limit=5
+read filePath="/home/lu5her/myObsidian/Workspace/{path}/file.md" limit=5
 ```
 
 ---
@@ -410,7 +414,7 @@ read filePath="/home/lu5her/myObsidian/Aiy_Workspace/{path}/file.md" limit=5
 - Policy/decision ที่เปลี่ยนวิธีทำงาน
 - Architecture/technical reference ที่ควรเก็บไว้
 - Reusable strategy/playbook
-- Lesson learned ที่ป้องกันการ重复犯错 (ซ้ำ)
+- Lesson learned ที่ป้องกันการทำผิดซ้ำ
 
 **SKIP IF:**
 - One-time setup/config (keep in Log only)

@@ -1,6 +1,6 @@
 ---
 name: affiliate-poster
-description: "Aiy's Affiliate Content Pipeline — manage product research, content creation, and Facebook auto-posting for the 'ของมันต้องมี' page. Use when Louis wants to research products, write content, update drafts, post to Facebook, schedule posts, or manage the content pipeline. Triggers: 'post', 'publish', 'affiliate', 'content', 'facebook post', 'schedule post', 'product', 'draft', 'info.md', 'Shopee', 'ของมันต้องมี'."
+description: "Aiy's Affiliate Content Pipeline — manage product research, content creation, and Facebook auto-posting for the 'ของมันต้องมี' page. Use ONLY when Louis mentions the affiliate/Facebook content pipeline or its assets: 'ของมันต้องมี' page, Facebook post, Shopee products, info.md drafts, post scheduling. NOT for general 'content/product/draft' talk (those are ambiguous). Triggers: 'ของมันต้องมี', 'facebook post', 'schedule post', 'affiliate', 'Shopee', 'info.md', 'publish post', 'โพสต์'."
 ---
 
 # 🛍️ Affiliate Content Pipeline — "ของมันต้องมี"
@@ -147,7 +147,7 @@ The pipeline will:
 
 ### Step 5: Log & Knowledge
 
-- Log the post in `{{OBSIDIAN_ROOT}}/Aiy/Logs/2026-MM.md`
+- Log the post in `/home/lu5her/myObsidian/Workspace/Aiy/Logs/2026-MM.md` (absolute path เสมอ)
 - If a new product category/pattern emerges → create Knowledge entry
 - Update README product status table
 
@@ -183,6 +183,6 @@ The pipeline will:
 ## Related Resources
 
 - Project: `{{HOME}}/01-Projects/affiliate-content/`
-- Facebook Page: "ของมันต้องมี" (ID: `$AIY_FB_PAGE_ID`)
+- Facebook Page: "ของมันต้องมี" (ID: 1210049942192010)
 - Agent: Aiy (aiy.md) — Strategic Orchestrator
 - Cher (cher.md) — Content & Creative Pipeline

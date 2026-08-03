@@ -67,7 +67,7 @@ Extract the **core signal** from the noise:
 
 Create Knowledge entry at:
 ```markdown
-Aiy_Workspace/Aiy/Knowledge/Knowledge-{name}.md
+Workspace/Aiy/Knowledge/Knowledge-{name}.md
 ```
 
 Template:
@@ -153,17 +153,17 @@ usage_count: 0
    - {Source URL / Knowledge entry link}
    ```
 
-5. **LINK BACK** — update the Knowledge entry's `## Related` section with `→ Skill: {name}` and add a `Skills_INDEX.md` row if one exists in `Aiy_Workspace/Shared/`.
+5. **LINK BACK** — update the Knowledge entry's `## Related` section with `→ Skill: {name}` and add a `Skills_INDEX.md` row if one exists in `Workspace/Shared/`.
 
 ### Step 4: INDEX
 
 Update **both** INDEX files:
 
-1. **Personal INDEX** — `Aiy_Workspace/Aiy/Knowledge/INDEX.md`
+1. **Personal INDEX** — `Workspace/Aiy/Knowledge/INDEX.md`
    - Add entry row to appropriate category table
    - Update total count in Stats section
 
-2. **Central INDEX** — `Aiy_Workspace/Shared/Knowledge_INDEX.md`
+2. **Central INDEX** — `Workspace/Shared/Knowledge_INDEX.md`
    - Add entry row to appropriate category table
    - Update total count in Stats section
 
@@ -223,4 +223,4 @@ DISTILL เสร็จ → FORGE CHECK → workflow? ──ไม่ใช่�
 ## Oracle Framework Reference
 - Adapted from: [Oracle Framework](https://github.com/Soul-Brews-Studio/oracle-framework)
 - Original concepts: rrr (Recursive Reflection & Refinement), distill pipeline, ψ (Collective Resonance)
-- Knowledge entry: `Aiy_Workspace/Aiy/Knowledge/Knowledge-Teach-Protocol.md`
+- Knowledge entry: `Workspace/Aiy/Knowledge/Knowledge-Teach-Protocol.md`

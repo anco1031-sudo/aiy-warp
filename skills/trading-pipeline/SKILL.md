@@ -1,6 +1,6 @@
 ---
 name: trading-pipeline
-description: "Aiy's Trading Pipeline — orchestrate full trading analysis through Kwan's team. Routes requests to Fon (news), June (technical), Bee (fundamental), Nam (risk), then Kwan synthesizes. Use when Louis asks to analyze a stock, check market, portfolio review, scan for setups, or any trading-related query. Triggers: 'analyze', 'check', 'market', 'stock', 'trade', 'portfolio', 'scan', 'setup', 'entry', 'exit', 'ticker symbol', 'BUY/SELL', 'position', 'chart', 'indicator'."
+description: "Aiy's Trading Pipeline — orchestrate full trading analysis through Kwan's team. Routes requests to Fon (news), June (technical), Bee (fundamental), Nam (risk), then Kwan synthesizes. Use ONLY for trading/investment requests: stock analysis, market/portfolio review, trade setups, entry/exit, tickers, charts, indicators. NOT for general 'analyze/check' of articles or documents (use teach-protocol or direct answer). Triggers: 'stock', 'ticker symbol', 'BUY/SELL', 'market', 'trade', 'portfolio', 'scan for setups', 'entry', 'exit', 'position', 'chart', 'indicator', 'RSI', 'MACD', 'support/resistance'."
 ---
 
 # 📊 Trading Pipeline — Full Analysis Orchestration
@@ -113,7 +113,7 @@ Kwan returns synthesized analysis to Aiy. Aiy then formats for Louis:
 
 ### Step 5: Log & Knowledge
 
-- Log the analysis in `Aiy_Workspace/Aiy/Logs/2026-MM.md`
+- Log the analysis in `Workspace/Aiy/Logs/2026-MM.md`
 - If a new trading pattern/setup emerges → create Knowledge entry
 - If Kwan finds a repeatable insight → Kwan logs to her own Knowledge
 
@@ -176,5 +176,5 @@ prompt: |-
 - June's agent: `~/.config/opencode/agents/june.md`
 - Bee's agent: `~/.config/opencode/agents/bee.md`
 - Nam's agent: `~/.config/opencode/agents/nam.md`
-- Trading Knowledge: `Aiy_Workspace/Aiy/Knowledge/` (ICT, Grid-Trading, etc.)
-- Trading Pipeline Knowledge: `Aiy_Workspace/Trader_Team/Kwan/Knowledge/`
+- Trading Knowledge: `Workspace/Aiy/Knowledge/` (ICT, Grid-Trading, etc.)
+- Trading Pipeline Knowledge: `Workspace/Trader_Team/Kwan/Knowledge/`
