@@ -1,6 +1,6 @@
 ---
 created: Sun 12,Jul 26 17:21
-updated: Thu 16,Jul 26 21:43
+updated: Mon 03,Aug 26 22:18
 ---
 
 # 📜 Team Charter — Aiy Ecosystem
@@ -8,7 +8,7 @@ updated: Thu 16,Jul 26 21:43
 ## 🎯 ภารกิจ
 สร้าง产品和บริการระดับพรีเมียมที่สะท้อนวิสัยทัศน์ของ Louis (หลุยส์) และ Aiy (อัย) ด้วยมาตรฐานคุณภาพสูงสุด
 
-## 🏢 โครงสร้างทีม — 6 ทีม 28 คน (18 Core + 10 External Specialists)
+## 🏢 โครงสร้างทีม — 6 ทีม 29 คน (18 Core + 11 External Specialists)
 
 ### 🏆 Orchestration
 | Agent | ชื่อ | บทบาท |
@@ -73,7 +73,7 @@ updated: Thu 16,Jul 26 21:43
 
 ### Core Team (18 คน)
 | Agent | ชื่อ | บทบาท | Pipeline | รายงานให้ |
-|---|---|---|---|---|---|
+|---|---|---|---|---|
 | Aiy | อัย | Strategic Orchestrator | 🏆 Orchestration | — |
 | Lin | หลิน | Elite Product Owner & Governor | 🔴 Tech/Product | Aiy |
 | An | อัน | Serene Systems Architect | 🔴 Tech/Product | Lin |
@@ -95,7 +95,7 @@ updated: Thu 16,Jul 26 21:43
 
 ### External Specialists (11 คน)
 | Agent | ชื่อเล่น | Pipeline | วิธีเรียกใช้ |
-|---|---|---|---|---|
+|---|---|---|---|
 | Sisyphus | ซิซิฟัส | 🌐 Full-Stack Dev | @sisyphus / `ultrawork` |
 | Oracle | โอราเคิล | 🌐 Architecture | @oracle |
 | Prometheus | โพรมีเทียส | 🌐 Planning | Tab → `/start-work` |
