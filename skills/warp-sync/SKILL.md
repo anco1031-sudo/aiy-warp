@@ -64,7 +64,7 @@ cd /home/lu5her/01-Projects/aiy-warp
    ```bash
    git grep -lP "[\x{4E00}-\x{9FFF}]" -- . || echo "✅ no CJK"
    ```
-   (เจอ → แก้เป็นภาษาไทย — เคยเจอ "重复犯错" ปนใน obsidian + Team_Charter)
+   (เจอ → แก้เป็นภาษาไทย — เคยเจออักษรจีนปนใน obsidian + Team_Charter)
 2. **Aiy_Workspace scan** — เหลือได้แค่บันทึกประวัติ rename:
    ```bash
    git grep -n "Aiy_Workspace" -- skills/ agents/ playbooks/ install/ | grep -v "rename จาก"

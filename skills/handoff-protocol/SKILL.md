@@ -79,10 +79,49 @@ Sections: 📌 สิ่งที่ส่งต่อ · ✅ เสร็จแ
 
 **ปิด window แบบ graceful (งานเสร็จแล้ว):**
 
-1. `tmux send-keys -t "aiy:<head>.1" "/exit" Enter` — **ต้องกด Enter ตาม!** (/exit ค้างใน input ถ้าไม่ Enter)
+1. `tmux send-keys -t "aiy:<head>.1" "/exit" Enter` — **ต้องกด Enter ตาม!** (/exit ค้างใน input ถ้าไม่ Enter) · ⚠️ ถ้า command palette โผล่ขึ้นมา (พิมพ์ "/" trigger) Enter รอบแรกอาจถูก palette กิน → `/exit` ค้างใน input → **กด Enter ซ้ำอีกครั้ง** (แล้วเช็ค `tmux list-panes` ว่า command เปลี่ยนเป็น zsh)
 2. รอ pane กลับเป็น shell (เช็ค `tmux list-panes` → command เปลี่ยนจาก opencode เป็น zsh)
 3. `tmux kill-window -t aiy:<head>` — session save อัตโนมัติแล้ว ไม่ต้องกังวล
 4. **⚠️ งานเสร็จ → ถาม Louis เรื่อง window นั้นก่อนปิดเสมอ** (Louis สั่ง 03-Aug-26): อย่าปิดเองโดยไม่ถาม — "ปิด window cher ไหม?"
+
+## 🔔 Completion Notification — "งานเสร็จ → แจ้งอัยที่หน้าต่างหลัก" (06-Aug-26)
+
+**หลักการ:** ทุก head session (headless หรือ window) เมื่องานเสร็จ **ต้องมีสัญญาณกลับมาถึง Aiy** — ห้ามเงียบหาย งาน headless เป็น fire-and-forget อัยต้องรู้ว่าเสร็จ/ล้มเหลวโดยไม่ต้อง poll เอง
+
+### DONE-marker convention (บังคับสำหรับ head ทุกตัว)
+
+เมื่อทำงานเสร็จ (หรือล้มเหลว) ให้เขียนไฟล์รายงานผลที่:
+`/tmp/opencode/{head}-{task}-DONE.md`
+
+```markdown
+# DONE — {task} ({head})
+status: DONE | FAILED
+head: {head}
+task: {task}
+completed: YYYY-MM-DDTHH:MM
+## Summary
+{สรุปผล 2-5 บรรทัด}
+## Deliverables
+- {path 1}
+- {path 2}
+## Notes
+{blocker / deviation / flag สำหรับ Aiy/Louis}
+```
+
+### Aiy dispatch flow (headless)
+
+1. เขียน brief decision-complete ลงไฟล์ `/tmp/opencode/{head}-{task}-brief.md` (ต้องมี section "เมื่อทำงานเสร็จ" — head ต้องเขียน DONE-marker)
+2. Dispatch: `nohup opencode run --agent {head} "อ่าน brief: /tmp/opencode/...-brief.md แล้วปฏิบัติตาม decision-complete" > /tmp/opencode/{head}-{task}.log 2>&1 &`
+3. **Attach watchdog ทันที** — spawn bg task (category quick, run_in_background=true) ที่:
+   - `while kill -0 {PID} 2>/dev/null; do sleep 15; done` (block รอ process ตาย)
+   - อ่าน `/tmp/opencode/{head}-{task}-DONE.md` (ถ้ามี) + `tail` log
+   - รายงานกลับ → **system แจ้งอัยอัตโนมัติ** → อัยสรุปเสนอ Louis
+4. Fallback: ไม่มี DONE file → อ่าน log tail + flag ให้อัยตรวจ session เอง (งานอาจ crash)
+
+### Aiy dispatch flow (window mode)
+
+- งานเสร็จเห็นในหน้าต่างเอง (หลุยส์ดูสด) — ปิด window ต้องถาม Louis ก่อน (กฎ 03-Aug)
+- ต้องการ auto-notify ก็ attach watchdog เดียวกัน (รอ process ตายใน pane นั้น)
 
 ## ⚠️ Rules
 
@@ -92,3 +131,7 @@ Sections: 📌 สิ่งที่ส่งต่อ · ✅ เสร็จแ
 4. **`--dry-run` ก่อน destructive ops** — ใช้กับงานที่แตะของจริง
 5. **Sandbox HOME เสมอ** ตอนทดสอบ — ห้ามแตะ `~/.config/` จริง
 6. **Respect redaction gate** (exit 5) — ไม่ bypass `--allow-identifiers` เว้น Louis อนุญาต
+7. **Path discipline ใน brief (บทเรียน 06-Aug-26 — เฌอเซฟผิดที่):** Brief ทุกฉบับที่ระบุ deliverable path ต้องเขียน absolute path ให้ชัดเจน + แยกให้ถูก:
+   - `00_Inbox/` = `/home/lu5her/myObsidian/00_Inbox/` (**vault root**) — ห้ามเดาเป็น `Workspace/00_Inbox/` (โฟลเดอร์นั้นไม่มีอยู่จริง)
+   - `Workspace/` = `/home/lu5her/myObsidian/Workspace/` (ทีม, Logs, Knowledge)
+   - Obsidian MCP path (`00_Inbox/Fiction/...`) = relative กับ vault root (`/home/lu5her/myObsidian/`) · filesystem tools (Read/Write/bash) = absolute path เสมอ
