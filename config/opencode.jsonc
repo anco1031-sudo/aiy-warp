@@ -1,0 +1,66 @@
+{
+  "plugin": ["oh-my-openagent@latest", "opendesign@git+https://github.com/manalkaff/opendesign.git"],
+  "$schema": "https://opencode.ai/config.json",
+  "default_agent": "aiy",
+  "instructions": ["AGENTS.md"],
+  "mcp": {
+    "obsidian": {
+      "type": "remote",
+      "url": "http://127.0.0.1:27123/mcp/",
+      "enabled": true,
+      "headers": {
+        "Authorization": "Bearer 17bdedeb834ef6749a8501e7216d6d60c75ce6d7330c29e7ad5f07a1a9acf77f"
+      }
+    },
+    "playwright": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["@playwright/mcp@latest", "--executable-path", "/usr/bin/chromium", "--headless", "--no-sandbox"],
+      "enabled": true
+    },
+    "chrome-devtools": {
+      "description": "Chrome DevTools MCP — full browser automation, debugging, and DevTools access",
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "chrome-devtools-mcp@latest", "--executable-path", "/usr/bin/chromium", "--headless"],
+      "enabled": true
+    },
+    "browsermcp": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["@browsermcp/mcp@latest"],
+      "enabled": false
+    }
+  },
+  // ── 9Router provider — added by Aiy 2026-08-20 (Louis's config) ──────────
+  // 9Router = local AI router @ http://127.0.0.1:20128 (FREE, auto-fallback)
+  // model "oc" routes to OpenCode Free via 9Router (tested OK, cost $0)
+  "provider": {
+    "9router": {
+      "npm": "@ai-sdk/openai-compatible",
+      "options": {
+        "baseURL": "http://127.0.0.1:20128/v1",
+        "apiKey": "sk-221ab9fbd2be7f4a-m0jdkr-53eb6985"
+      },
+      "models": {
+        "oc": {
+          "name": "oc",
+          "modalities": {
+            "input": ["text", "image"],
+            "output": ["text"]
+          }
+        }
+      }
+    }
+  },
+  // ── Global default model — Louis: keep opencode deepseek as before ──────
+  // 9router/oc stays available as provider option (switch anytime via /models)
+  "model": "opencode/deepseek-v4-flash-free",
+  "agent": {
+    "explorer": {
+      "description": "Fast explorer subagent for codebase exploration",
+      "mode": "subagent",
+      "model": "9router/oc"
+    }
+  }
+}

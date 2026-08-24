@@ -1,0 +1,146 @@
+{
+  "$schema": "https://raw.githubusercontent.com/code-yeongyu/oh-my-openagent/dev/assets/oh-my-opencode.schema.json",
+  "agents": {
+    "sisyphus": {
+      "model": "opencode/deepseek-v4-flash-free",
+      "fallback_models": [
+        { "model": "qwen3.6-plus-free" },
+        { "model": "google/gemini-3-flash-preview" },
+        { "model": "gpt-5.5:free" }
+      ]
+    },
+    "hephaestus": {
+      "model": "opencode/deepseek-v4-flash-free",
+      "fallback_models": [
+        { "model": "qwen/qwen3-coder:free" },
+        { "model": "qwen3.6-plus-free" },
+        { "model": "gpt-5.4:free" }
+      ]
+    },
+    "oracle": {
+      "model": "opencode/deepseek-v4-flash-free",
+      "fallback_models": [
+        { "model": "qwen3.6-plus-free" },
+        { "model": "google/gemini-3-flash-preview" },
+        { "model": "gpt-5.5:free" }
+      ]
+    },
+    "explore": {
+      "model": "opencode/north-mini-code-free",
+      "fallback_models": [
+        { "model": "alibaba/qwen3.6-flash" },
+        { "model": "opencode/deepseek-v4-flash-free" }
+      ]
+    },
+    "multimodal-looker": {
+      "model": "google/gemini-3-flash-preview",
+      "fallback_models": [
+        { "model": "alibaba/qwen3.6-flash" },
+        { "model": "opencode/deepseek-v4-flash-free" }
+      ]
+    },
+    "prometheus": {
+      "model": "opencode/deepseek-v4-flash-free",
+      "fallback_models": [
+        { "model": "qwen3.6-plus-free" },
+        { "model": "google/gemini-3-flash-preview" },
+        { "model": "gpt-5.5:free" }
+      ]
+    },
+    "metis": {
+      "model": "opencode/deepseek-v4-flash-free",
+      "fallback_models": [
+        { "model": "qwen/qwen3-coder:free" },
+        { "model": "gpt-5.5:free" }
+      ]
+    },
+    "momus": {
+      "model": "opencode/deepseek-v4-flash-free",
+      "fallback_models": [
+        { "model": "qwen3.6-plus-free" },
+        { "model": "google/gemini-3-flash-preview" },
+        { "model": "gpt-5.5:free" }
+      ]
+    },
+    "atlas": {
+      "model": "opencode/deepseek-v4-flash-free",
+      "fallback_models": [
+        { "model": "qwen3.6-plus-free" },
+        { "model": "gpt-5.4:free" }
+      ]
+    },
+    "sisyphus-junior": {
+      "model": "opencode/deepseek-v4-flash-free",
+      "fallback_models": [
+        { "model": "qwen/qwen3-coder:free" },
+        { "model": "opencode/north-mini-code-free" },
+        { "model": "opencode/north-mini-code-free" }
+      ]
+    }
+  },
+  "categories": {
+    "visual-engineering": {
+      "model": "google/gemini-3-flash-preview",
+      "fallback_models": [
+        { "model": "alibaba/qwen3.6-flash" },
+        { "model": "opencode/deepseek-v4-flash-free" },
+        { "model": "qwen3.6-plus-free" }
+      ]
+    },
+    "ultrabrain": {
+      "model": "opencode/deepseek-v4-flash-free",
+      "fallback_models": [
+        { "model": "qwen3.6-plus-free" },
+        { "model": "google/gemini-3-flash-preview" },
+        { "model": "gpt-5.5:free" }
+      ]
+    },
+    "deep": {
+      "model": "opencode/deepseek-v4-flash-free",
+      "fallback_models": [
+        { "model": "qwen3.6-plus-free" },
+        { "model": "google/gemini-3-flash-preview" },
+        { "model": "gpt-5.5:free" }
+      ]
+    },
+    "artistry": {
+      "model": "google/gemini-3-flash-preview",
+      "fallback_models": [
+        { "model": "alibaba/qwen3.6-flash" },
+        { "model": "qwen3.6-plus-free" },
+        { "model": "opencode/deepseek-v4-flash-free" }
+      ]
+    },
+    "quick": {
+      "model": "opencode/north-mini-code-free",
+      "fallback_models": [
+        { "model": "opencode/north-mini-code-free" },
+        { "model": "opencode/deepseek-v4-flash-free" },
+        { "model": "google/gemini-3-flash-preview" }
+      ]
+    },
+    "unspecified-low": {
+      "model": "opencode/north-mini-code-free",
+      "fallback_models": [
+        { "model": "opencode/north-mini-code-free" },
+        { "model": "opencode/deepseek-v4-flash-free" }
+      ]
+    },
+    "unspecified-high": {
+      "model": "opencode/deepseek-v4-flash-free",
+      "fallback_models": [
+        { "model": "qwen3.6-plus-free" },
+        { "model": "google/gemini-3-flash-preview" },
+        { "model": "qwen3.6-plus-free" }
+      ]
+    },
+    "writing": {
+      "model": "google/gemini-3-flash-preview",
+      "fallback_models": [
+        { "model": "alibaba/qwen3.6-flash" },
+        { "model": "qwen3.6-plus-free" },
+        { "model": "opencode/deepseek-v4-flash-free" }
+      ]
+    }
+  }
+}

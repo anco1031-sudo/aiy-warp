@@ -269,7 +269,7 @@ tags: [trading, strategy, ICT]
 
 | Situation | Template | Location |
 |-----------|----------|----------|
-| Create daily log entry | Append to `Logs/YYYY-MM.md` ตาม format `Template_Daily_Log.md` | `Meta/Template_Daily_Log.md` |
+| Create daily log entry | Append to `Logs/YYYY/MM/YYYY-MMWww.md` ตาม format `Template_Daily_Log.md` | `Meta/Template_Daily_Log.md` |
 | Create knowledge entry | `Template_Knowledge.md` | `Meta/Template_Knowledge.md` |
 | Create handoff | CoWorkspace Handoff format | `CoWorkspace/Handoff/YYYY/MM/DD/` |
 | Create standup | CoWorkspace Standup format | `CoWorkspace/Standup/YYYY/MM/DD/` |
@@ -305,10 +305,13 @@ Shared/Knowledge_INDEX.md         — Central INDEX (รวมทุกทีม
 ```
 Context: Agent finishes a task and needs to log it
 Steps:
-1. Read current monthly log → Logs/YYYY-MM.md
-2. Append new ## MM-DD section (or append under existing date)
-3. Format: ตาม Template_Daily_Log.md
-4. Include: work items, deliverables, reflection, knowledge entries
+1. รัน `date +%G-W%V` → ได้ `YYYY-Www` ปัจจุบัน
+2. คำนวณ path: Logs/{YYYY}/{MM}/{YYYY-MMWww}.md (MM = เดือนวันจันทร์ของสัปดาห์)
+3. ถ้าไฟล์ weekly ยังไม่มี → สร้างใหม่ตาม Template_Daily_Log.md (เก็บ week เก่าไว้)
+4. Read current weekly log → Logs/YYYY/MM/YYYY-MMWww.md
+5. Append new ## MM-DD section (or append under existing date)
+6. Format: ตาม Template_Daily_Log.md
+7. Include: work items, deliverables, reflection, knowledge entries
 ```
 
 ### Workflow B: Creating Knowledge Entry

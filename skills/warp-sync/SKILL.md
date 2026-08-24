@@ -22,10 +22,15 @@ live (เครื่องแม่)  →  repo (canonical)  →  push → เ�
 |---|---|
 | Live agents | `/home/lu5her/.config/opencode/agents/*.md` |
 | Live skills | `/home/lu5her/.config/opencode/skills/*/SKILL.md` |
+| Live scripts | `/home/lu5her/.config/opencode/scripts/*` |
+| Live config | `/home/lu5her/.config/opencode/{opencode.json,AGENTS.md,model-mapping.json,git-team/}` |
 | Repo | `/home/lu5her/01-Projects/aiy-warp/` |
 | Repo agents | `.../agents/*.md` · Repo skills | `.../skills/*/SKILL.md` |
+| Repo scripts | `.../scripts/{media,pdf,office,browser,utils}/` |
+| Repo config | `.../config/` |
 | bundles.yaml | `.../install/bundles.yaml` |
 | warp.config.example | `.../install/warp.config.example` |
+| CONSTRUCTION | `.../docs/CONSTRUCTION.md` |
 
 ## 📋 ขอบเขตการซิงค์ (checklist)
 
@@ -95,7 +100,7 @@ cd /home/lu5her/01-Projects/aiy-warp
 git add -A
 git commit -m "🔄 sync: warp kit ล่าสุดจากเครื่อง — <สรุปสั้นๆ สิ่งที่เปลี่ยน>"
 git push origin main
-# 7. Log ลง Obsidian: Workspace/Aiy/Logs/YYYY-MM.md (ระบุ commit hash)
+# 7. Log ลง Obsidian: Workspace/Aiy/Logs/YYYY/MM/YYYY-MMWww.md (ระบุ commit hash)
 ```
 
 ## 💡 หมายเหตุ

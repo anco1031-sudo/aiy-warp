@@ -1,0 +1,113 @@
+{
+  "schema_version": 1,
+  "last_updated": "2026-08-21",
+  "purpose": "Model allocation mapping for team agents. Used by /model-check command (scripts/model-check.ts) to suggest fallbacks and upgrades when registry changes.",
+  "notes": {
+    "opencode/muse-spark-1.2-contributor-free": "1M/131K reasoning multimodal (รูป/เสียง/วิดีโอ/PDF) — หัวหน้า orchestrator/product/security Hybrid แนะนำ",
+    "opencode/big-pickle": "200K/32K reasoning — ตัวหลักสายทั่วไป แทน deepseek-v4-flash",
+    "opencode/hy3-free": "190K/64K reasoning low/medium/high — งานเขียนยาว ครีเอทีฟ แทน laguna",
+    "opencode/nemotron-3-ultra-free": "1M context — สังเคราะห์/เอกสารยาว, หัวหน้าสายงาน",
+    "opencode/nemotron-3.5-lightning-free": "262K/262K — งานเขียนยาว, ทายาท ling-3.0-flash",
+    "opencode/mimo-v2.5-free": "multimodal (รูป/เสียง/วิดีโอ) 200K/32K — สายงานที่ต้องเห็นภาพ",
+    "opencode/x-preview-f-free": "1M/131K reasoning multimodal — vision สำรอง mint/jewel",
+    "opencode/deepseek-v4-flash-free": "DEPRECATED 2026-08-21 — หายจาก registry → ย้ายไป big-pickle/muse",
+    "opencode/laguna-s-2.1-free": "DEPRECATED 2026-08-21 — หายจาก registry → ย้ายไป hy3-free"
+  },
+  "agents": {
+    "aiy": {
+      "role": "orchestrator",
+      "current": "opencode/muse-spark-1.2-contributor-free",
+      "fallbacks": ["opencode/muse-spark-1.2-contributor-free", "opencode/big-pickle"]
+    },
+    "lin": {
+      "role": "product_head",
+      "current": "opencode/muse-spark-1.2-contributor-free",
+      "fallbacks": ["opencode/muse-spark-1.2-contributor-free", "opencode/big-pickle"]
+    },
+    "sai": {
+      "role": "security_head",
+      "current": "opencode/muse-spark-1.2-contributor-free",
+      "fallbacks": ["opencode/muse-spark-1.2-contributor-free", "opencode/big-pickle"]
+    },
+    "cher": {
+      "role": "content_head",
+      "current": "opencode/nemotron-3.5-lightning-free",
+      "fallbacks": ["opencode/nemotron-3.5-lightning-free", "opencode/hy3-free", "opencode/big-pickle"]
+    },
+    "kwan": {
+      "role": "trading_head",
+      "current": "opencode/nemotron-3-ultra-free",
+      "fallbacks": ["opencode/nemotron-3-ultra-free"]
+    },
+    "jean": {
+      "role": "legal",
+      "current": "opencode/nemotron-3-ultra-free",
+      "fallbacks": ["opencode/nemotron-3-ultra-free"]
+    },
+    "an": {
+      "role": "architect",
+      "current": "opencode/nemotron-3-ultra-free",
+      "fallbacks": ["opencode/nemotron-3-ultra-free"]
+    },
+    "pao": {
+      "role": "builder",
+      "current": "opencode/nemotron-3-ultra-free",
+      "fallbacks": ["opencode/nemotron-3-ultra-free"]
+    },
+    "cloud": {
+      "role": "devops",
+      "current": "opencode/nemotron-3-ultra-free",
+      "fallbacks": ["opencode/nemotron-3-ultra-free"]
+    },
+    "fon": {
+      "role": "news_analyst",
+      "current": "opencode/nemotron-3-ultra-free",
+      "fallbacks": ["opencode/nemotron-3-ultra-free"]
+    },
+    "fah": {
+      "role": "qa",
+      "current": "opencode/big-pickle",
+      "fallbacks": ["opencode/big-pickle", "opencode/hy3-free"]
+    },
+    "pleng": {
+      "role": "pentester",
+      "current": "opencode/big-pickle",
+      "fallbacks": ["opencode/big-pickle", "opencode/hy3-free"]
+    },
+    "june": {
+      "role": "tech_analyst",
+      "current": "opencode/big-pickle",
+      "fallbacks": ["opencode/big-pickle", "opencode/hy3-free"]
+    },
+    "bee": {
+      "role": "fundamental_analyst",
+      "current": "opencode/big-pickle",
+      "fallbacks": ["opencode/big-pickle", "opencode/hy3-free"]
+    },
+    "nam": {
+      "role": "risk_manager",
+      "current": "opencode/big-pickle",
+      "fallbacks": ["opencode/big-pickle", "opencode/hy3-free"]
+    },
+    "mint": {
+      "role": "ui_ux_design",
+      "current": "opencode/mimo-v2.5-free",
+      "fallbacks": ["opencode/mimo-v2.5-free", "opencode/muse-spark-1.2-contributor-free", "opencode/big-pickle"]
+    },
+    "ploy": {
+      "role": "narrative",
+      "current": "opencode/hy3-free",
+      "fallbacks": ["opencode/hy3-free", "opencode/big-pickle"]
+    },
+    "jewel": {
+      "role": "multimedia",
+      "current": "opencode/mimo-v2.5-free",
+      "fallbacks": ["opencode/mimo-v2.5-free", "opencode/muse-spark-1.2-contributor-free"]
+    }
+  },
+  "capability_hints": {
+    "vision_roles": ["ui_ux_design", "multimedia"],
+    "long_output_roles": ["content_head", "narrative"],
+    "long_context_roles": ["orchestrator", "product_head", "security_head", "trading_head", "legal", "architect", "builder", "devops", "news_analyst"]
+  }
+}

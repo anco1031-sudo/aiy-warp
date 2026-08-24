@@ -119,7 +119,7 @@ When you need to send a message to Louis, follow these steps:
 
 ### Step 4: Obsidian Integration
 After sending a message, record it at:
-- Log: `/home/lu5her/myObsidian/Workspace/Aiy/Logs/YYYY-MM.md` (absolute path เสมอ)
+- Log: `/home/lu5her/myObsidian/Workspace/Aiy/Logs/YYYY/MM/YYYY-MMWww.md` (absolute path เสมอ)
 - If it's a task/decision → Knowledge base
 
 ---

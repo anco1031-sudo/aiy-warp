@@ -10,7 +10,7 @@ description: "Aiy's Affiliate Content Pipeline — manage product research, cont
 ## Project Structure
 
 ```
-{{HOME}}/01-Projects/affiliate-content/
+/home/lu5her/01-Projects/affiliate-content/
 ├── .env                          # Facebook API token (chmod 600, source to use)
 ├── README.md                     # Workflow docs + product status
 ├── NEW-content-drafts.md         # Cher's content drafts (002-006)
@@ -30,7 +30,7 @@ description: "Aiy's Affiliate Content Pipeline — manage product research, cont
 
 ```bash
 # Pipeline status — see all products + readiness
-cd {{HOME}}/01-Projects/affiliate-content
+cd /home/lu5her/01-Projects/affiliate-content
 python3 content_pipeline.py status
 
 # Preview a post without publishing
@@ -135,8 +135,8 @@ Before posting, verify:
 ### Step 4: Publish
 
 ```bash
-source {{HOME}}/01-Projects/affiliate-content/.env
-python3 {{HOME}}/01-Projects/affiliate-content/content_pipeline.py publish {NNN}
+source /home/lu5her/01-Projects/affiliate-content/.env
+python3 /home/lu5her/01-Projects/affiliate-content/content_pipeline.py publish {NNN}
 ```
 
 The pipeline will:
@@ -182,7 +182,7 @@ The pipeline will:
 
 ## Related Resources
 
-- Project: `{{HOME}}/01-Projects/affiliate-content/`
+- Project: `/home/lu5her/01-Projects/affiliate-content/`
 - Facebook Page: "ของมันต้องมี" (ID: 1210049942192010)
 - Agent: Aiy (aiy.md) — Strategic Orchestrator
 - Cher (cher.md) — Content & Creative Pipeline
