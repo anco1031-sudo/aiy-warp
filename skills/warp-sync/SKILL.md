@@ -12,7 +12,7 @@ live (เครื่องแม่)  →  repo (canonical)  →  push → เ�
 ```
 
 - **เครื่องนี้คือ MASTER** — live config (`~/.config/opencode/`) คือต้นทางของทุกการปรับปรุง
-- **repo (`01-Projects/aiy-warp/`) คือ canonical kit** ที่เครื่องอื่นจะ pull ไป warp
+- **repo (`02-Areas/aiy-warp/`) คือ canonical kit** ที่เครื่องอื่นจะ pull ไป warp
 - ⛔ **ห้ามรัน `install opencode` บนเครื่องนี้** — ไม่มีประโยชน์ (live ใหม่กว่าแล้ว) + เสี่ยงพัง (affiliate-poster มี `{{HOME}}` ที่ installer ยังไม่แทนค่า — P1 debt)
 - `install` มีไว้สำหรับ **เครื่องใหม่เท่านั้น**: `git clone` → `./install/src/aiy-warp install opencode`
 
@@ -24,7 +24,7 @@ live (เครื่องแม่)  →  repo (canonical)  →  push → เ�
 | Live skills | `/home/lu5her/.config/opencode/skills/*/SKILL.md` |
 | Live scripts | `/home/lu5her/.config/opencode/scripts/*` |
 | Live config | `/home/lu5her/.config/opencode/{opencode.json,AGENTS.md,model-mapping.json,git-team/}` |
-| Repo | `/home/lu5her/01-Projects/aiy-warp/` |
+| Repo | `/home/lu5her/02-Areas/aiy-warp/` |
 | Repo agents | `.../agents/*.md` · Repo skills | `.../skills/*/SKILL.md` |
 | Repo scripts | `.../scripts/{media,pdf,office,browser,utils}/` |
 | Repo config | `.../config/` |
@@ -62,7 +62,7 @@ live (เครื่องแม่)  →  repo (canonical)  →  push → เ�
 ## ✅ Quality Gates (บังคับก่อน commit)
 
 ```bash
-cd /home/lu5her/01-Projects/aiy-warp
+cd /home/lu5her/02-Areas/aiy-warp
 ```
 
 1. **CJK scan** — ต้องเป็น 0 ใน repo:
@@ -89,7 +89,7 @@ cd /home/lu5her/01-Projects/aiy-warp
 ## 🚀 ขั้นตอน sync ฉบับเต็ม
 
 ```bash
-cd /home/lu5her/01-Projects/aiy-warp
+cd /home/lu5her/02-Areas/aiy-warp
 
 # 1. หา drift: เทียบ live vs repo (markers + diff)
 # 2. ซิงค์ skills (copy + {{HOME}} restore สำหรับ affiliate-poster)

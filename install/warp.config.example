@@ -12,7 +12,7 @@ version: 1
 # Local paths on THIS machine (used for doctor check 6 + P1 parameterization)
 paths:
   home: /home/lu5her                # {{HOME}}
-  workspace: /home/lu5her/01-Projects/aiy-warp   # {{WARP_WORKSPACE}}
+  workspace: /home/lu5her/02-Areas/aiy-warp   # {{WARP_WORKSPACE}}
   obsidian_root: /home/lu5her/myObsidian/Workspace   # {{OBSIDIAN_ROOT}}
 
 # Platform destinations (opencode is P0; others land in P1/P2)

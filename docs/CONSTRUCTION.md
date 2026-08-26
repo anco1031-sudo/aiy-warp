@@ -1,6 +1,6 @@
 # 🏗️ CONSTRUCTION — โครงสร้าง aiy-warp & วิธี Init เครื่องใหม่
 
-> **Source of Truth:** repo นี้ (`01-Projects/aiy-warp`) คือ canonical kit — ทุกอย่างที่เกี่ยวกับอัยรวมศูนย์ที่นี่ แล้ว `warp` ไปเครื่องอื่น
+> **Source of Truth:** repo นี้ (`02-Areas/aiy-warp`) คือ canonical kit — ทุกอย่างที่เกี่ยวกับอัยรวมศูนย์ที่นี่ แล้ว `warp` ไปเครื่องอื่น
 
 ## 📦 โครงสร้างปัจจุบัน (v0.3 — รวมศูนย์ 24 ส.ค. 2026)
 
@@ -68,8 +68,8 @@ aiy-warp/
 
 ```bash
 # 1. Clone kit
-git clone https://github.com/anco1031-sudo/aiy-warp.git ~/01-Projects/aiy-warp
-cd ~/01-Projects/aiy-warp
+git clone https://github.com/anco1031-sudo/aiy-warp.git ~/02-Areas/aiy-warp
+cd ~/02-Areas/aiy-warp
 
 # 2. Build CLI (ต้องมี Go 1.22+)
 cd install/src && go build -o aiy-warp . && cd ../..
@@ -122,7 +122,7 @@ python3 scripts/pdf/read.py /path/to/doc.pdf
 
 ```bash
 # ที่เครื่องแม่ (MASTER) หลังแก้ agents/skills/config/scripts
-cd ~/01-Projects/aiy-warp
+cd ~/02-Areas/aiy-warp
 # 1. ซิงค์ live → repo (ตาม warp-sync skill)
 # 2. รัน gates
 git grep -lP "[\x{4E00}-\x{9FFF}]" -- . || echo "✅ no CJK"
