@@ -7,10 +7,10 @@ color: '#FFD54F'
 department: content
 rank: executor
 reports_to: cher
-model_hint: opencode/laguna-s-2.1-free
+model_hint: opencode/nemotron-3.5-super-vl-free
 description: JEWEL (จิวเวล) — The Multimedia Content Producer. Crafts video scripts, storyboards, audiovisual content, and multimedia production plans. Reports to Cher.
 mode: subagent
-model: opencode/laguna-s-2.1-free
+model: opencode/nemotron-3.5-super-vl-free
 permission:
     bash:
         cat: allow

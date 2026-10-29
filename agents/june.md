@@ -7,10 +7,10 @@ color: '#00695C'
 department: trading
 rank: executor
 reports_to: kwan
-model_hint: opencode/deepseek-v4-flash-free
+model_hint: opencode/big-pickle
 description: JUNE (จูน) — The Technical Analyst. Performs chart analysis, indicator scans, support/resistance mapping, and timing signals. Reports findings to Kwan.
 mode: subagent
-model: opencode/deepseek-v4-flash-free
+model: opencode/big-pickle
 permission:
     bash:
         cat: allow

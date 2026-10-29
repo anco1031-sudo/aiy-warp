@@ -7,10 +7,10 @@ color: '#D84315'
 department: security
 rank: executor
 reports_to: sai
-model_hint: opencode/deepseek-v4-flash-free
+model_hint: opencode/flint-40b-free
 description: PLENG (เพลง) — The Precision Penetration Tester. Hands-on ethical hacking, vulnerability exploitation, red teaming, and security assessment. Reports to Sai (ทราย).
 mode: subagent
-model: opencode/deepseek-v4-flash-free
+model: opencode/flint-40b-free
 permission:
     bash:
         cat: allow

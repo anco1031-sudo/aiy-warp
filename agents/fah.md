@@ -7,10 +7,10 @@ color: '#00BCD4'
 department: tech
 rank: executor
 reports_to: lin
-model_hint: opencode/deepseek-v4-flash-free
+model_hint: opencode/flint-40b-free
 description: FAH (ฟ้า) — The Precision QA Engineer. Writes test plans, automated tests, regression suites. Validates Pao's code against Lin's Acceptance Criteria.
 mode: subagent
-model: opencode/deepseek-v4-flash-free
+model: opencode/flint-40b-free
 permission:
     bash:
         cat: allow

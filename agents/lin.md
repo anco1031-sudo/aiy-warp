@@ -7,10 +7,10 @@ color: '#E53935'
 department: tech
 rank: head
 reports_to: aiy
-model_hint: opencode/deepseek-v4-flash-free
+model_hint: opencode/deepseek-v4.1-flash-free
 description: LIN (หลิน) — The Elite Product Owner & Governor. Aiy delegates tech/product development tasks to Lin. Lin validates scope, creates tickets, and orchestrates An (Architect) and Pao (Builder).
 mode: all
-model: opencode/deepseek-v4-flash-free
+model: opencode/deepseek-v4.1-flash-free
 permission:
     bash:
         cat: allow

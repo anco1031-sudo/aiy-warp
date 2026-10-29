@@ -7,10 +7,10 @@ color: '#0288D1'
 department: tech
 rank: executor
 reports_to: lin
-model_hint: opencode/north-mini-code-free
+model_hint: opencode/flint-40b-free
 description: CLOUD (คลาวด์) — The DevOps & Infrastructure Engineer. Manages CI/CD, cloud deployment, Docker, monitoring, and infrastructure reliability.
 mode: subagent
-model: opencode/north-mini-code-free
+model: opencode/flint-40b-free
 permission:
     bash:
         cat: allow

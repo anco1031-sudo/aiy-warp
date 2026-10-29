@@ -19,7 +19,7 @@ agents:
     rank: primary
     department: core
     reports_to: null
-    skills: [aiy, aiy-messaging, obsidian, affiliate-poster, teach-protocol, handoff-protocol, trading-pipeline, warp-sync, sync-copilot-prompts, media-ocr, media-transcribe, pdf-toolkit, office-suite, browser-control, brave-ctl]
+    skills: [aiy, aiy-messaging, obsidian, affiliate-poster, teach-protocol, handoff-protocol, trading-pipeline, warp-sync, sync-copilot-prompts, media-ocr, media-transcribe, pdf-toolkit, office-suite, browser-control, brave-ctl, learn, distill-to-resource, document-forge, humanizer]
 
   # ── tech (Head: lin) ────────────────────────────────────────────────
   - name: lin
@@ -160,5 +160,17 @@ skills:
     owned_by: aiy
     departments: [core]
   - name: brave-ctl
+    owned_by: aiy
+    departments: [core]
+  - name: learn
+    owned_by: aiy
+    departments: [core]
+  - name: distill-to-resource
+    owned_by: aiy
+    departments: [core]
+  - name: document-forge
+    owned_by: aiy
+    departments: [core]
+  - name: humanizer
     owned_by: aiy
     departments: [core]

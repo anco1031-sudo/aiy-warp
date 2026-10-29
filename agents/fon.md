@@ -7,10 +7,10 @@ color: '#1565C0'
 department: trading
 rank: executor
 reports_to: kwan
-model_hint: opencode/nemotron-3-ultra-free
+model_hint: opencode/big-pickle
 description: FON (ฝน) — The News & Sentiment Analyst. Monitors news, macro events, sentiment indicators, and earnings calendar. Reports findings to Kwan.
 mode: subagent
-model: opencode/nemotron-3-ultra-free
+model: opencode/big-pickle
 permission:
     bash:
         cat: allow

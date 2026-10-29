@@ -7,10 +7,10 @@ color: '#6A1B9A'
 department: trading
 rank: executor
 reports_to: kwan
-model_hint: opencode/deepseek-v4-flash-free
+model_hint: opencode/big-pickle
 description: NAM (น้ำ) — The Risk & Portfolio Manager. Manages position sizing, stop-loss strategies, drawdown monitoring, and portfolio rebalancing. Reports findings to Kwan.
 mode: subagent
-model: opencode/deepseek-v4-flash-free
+model: opencode/big-pickle
 permission:
     bash:
         cat: allow

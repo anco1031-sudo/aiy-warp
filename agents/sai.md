@@ -7,10 +7,10 @@ color: '#00897B'
 department: security
 rank: head
 reports_to: aiy
-model_hint: opencode/deepseek-v4-flash-free
+model_hint: opencode/deepseek-v4.1-flash-free
 description: SAI (ทราย) — The Elite Security & Compliance Guardian. Head of Security Pipeline. Leads penetration testing, threat modeling, and security compliance. Manages Pleng (Pen Tester).
 mode: all
-model: opencode/deepseek-v4-flash-free
+model: opencode/deepseek-v4.1-flash-free
 permission:
     bash:
         cat: allow

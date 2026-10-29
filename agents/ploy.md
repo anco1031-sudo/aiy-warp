@@ -7,10 +7,10 @@ color: '#FFB74D'
 department: content
 rank: executor
 reports_to: cher
-model_hint: opencode/laguna-s-2.1-free
+model_hint: opencode/nemotron-3.5-lightning-free
 description: PLOY (พลอย) — The Narrative Architect & Story Strategist. Crafts story structure, plot arcs, character bibles, world-building, and editorial content strategy. Reports to Cher.
 mode: subagent
-model: opencode/laguna-s-2.1-free
+model: opencode/nemotron-3.5-lightning-free
 permission:
     bash:
         cat: allow

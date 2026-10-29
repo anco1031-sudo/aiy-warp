@@ -7,10 +7,10 @@ color: '#FF6F9C'
 department: tech
 rank: executor
 reports_to: lin
-model_hint: opencode/ling-3.0-flash-free
+model_hint: opencode/mimo-v2.6-flash-free
 description: MINT (มิ้นท์) — The Visionary UI/UX Designer. Designs wireframes, prototypes, design systems, and visual assets. Receives brief from Lin, hands off to Pao.
 mode: subagent
-model: opencode/ling-3.0-flash-free
+model: opencode/mimo-v2.6-flash-free
 permission:
     bash:
         cat: allow

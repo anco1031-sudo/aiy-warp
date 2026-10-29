@@ -7,10 +7,10 @@ color: '#2E7D32'
 department: trading
 rank: executor
 reports_to: kwan
-model_hint: opencode/deepseek-v4-flash-free
+model_hint: opencode/flint-40b-free
 description: BEE (บี) — The Fundamental Analyst. Performs financial statement analysis, DCF valuation, ratio analysis, and moat assessment. Reports findings to Kwan.
 mode: subagent
-model: opencode/deepseek-v4-flash-free
+model: opencode/flint-40b-free
 permission:
     bash:
         cat: allow
