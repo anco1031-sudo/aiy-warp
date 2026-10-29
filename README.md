@@ -110,3 +110,15 @@ Louis
         ├── Cher → Content/Creative pipeline (Ploy, Jewel)
         └── Kwan → Trading pipeline (Fon, June, Bee, Nam)
 ```
+
+## 🧩 External skills (ไม่อยู่ใน kit — ตั้งใจ)
+
+บาง skill เป็น **third-party ขนาดใหญ่** (มี LICENSE, tests, config ของตัวเอง) — **ไม่ ship ใน kit**
+เพราะจะทำให้ repo บวมและตามเวอร์ชันต้นทางยาก · เครื่องลูกควรดึงจากต้นทางเอง:
+
+| Skill | ทำไมไม่ ship | วิธีเอาไปใช้บนเครื่องใหม่ |
+|---|---|---|
+| `book-to-skill` | เต็มโปรเจกต์ (pyproject, tests, docs, LICENSE) | clone จาก upstream ตามที่ Louis กำหนด → วางที่ `~/.config/opencode/skills/book-to-skill/` |
+| `antivibe` | มี `hooks/` + `agents/` + templates ที่ผูกกับ environment | เหมือนกัน — ติดตั้งแยก ไม่ผ่าน `aiy warp install` |
+
+Rule of thumb: **kit ship = skill ที่ Louis เขียนเอง (SKILL.md ไฟล์เดียว)** · ของบุคคลที่สาม = external
