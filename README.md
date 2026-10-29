@@ -12,7 +12,9 @@ The soul lives in markdown. So it can live **anywhere**. The `aiy warp` CLI ship
 | Path | Contents | Notes |
 |---|---|---|
 | `agents/` | 18 agent identity files (`aiy`, `lin`, `kwan`, `cher`, …) | One markdown file per soul — model-agnostic |
-| `skills/` | 6 operational skills (affiliate-poster, aiy-messaging, handoff-protocol, obsidian, teach-protocol, trading-pipeline) | Reusable workflows with triggers |
+| `skills/` | 19 operational skills (aiy, affiliate-poster, obsidian, handoff-protocol, trading-pipeline, learn, document-forge, …) | Reusable workflows with triggers |
+| `plugins/` | opencode v2 plugins — `charcheck` (Pre-Send Quality Gate: ตรวจอักษรต่างภาษาทุกครั้งที่ agent เขียนไฟล์) | host-level, ติดตั้งที่ `<config>/plugins/` |
+| `scripts/` | helper ที่ agent เรียกเอง — `check-chars.py` (ตรวจอักษรต่างภาษา, code-point) | `*.py` ที่ root ของ `scripts/` = ship ไปด้วย · bash tooling ใน `scripts/<area>/` = host-side |
 | `templates/` | Obsidian workspace templates (Daily Log, Knowledge, Reflection) | The memory format |
 | `playbooks/` | Team Charter, Architecture Decisions, Knowledge INDEX | The shared rules of engagement |
 | `install/` | The `aiy warp` CLI (Go binary) — install / export / doctor / list / migrate / init-workspace | See `install/README.md` |
@@ -122,3 +124,22 @@ Louis
 | `antivibe` | มี `hooks/` + `agents/` + templates ที่ผูกกับ environment | เหมือนกัน — ติดตั้งแยก ไม่ผ่าน `aiy warp install` |
 
 Rule of thumb: **kit ship = skill ที่ Louis เขียนเอง (SKILL.md ไฟล์เดียว)** · ของบุคคลที่สาม = external
+
+## 🔍 Automatic quality gate (plugins/charcheck)
+
+ปัญหาเดิม: กฎ "ห้ามอักษรต่างภาษาตกค้าง" อยู่ใน `AGENTS.md` แต่ทุกคนต้องจำเอง → 29-Oct-26 อักษรจีน/รัสเซียหลุด **4 ครั้งในวันเดียว** และหลุดซ้ำระหว่างที่กำลังแก้เรื่องนี้
+
+ตอนนี้มีด่านที่ไม่มีวันเหนื่อย:
+
+```
+agent เขียนไฟล์ (write / edit / patch)
+        ↓
+plugins/charcheck → python3 scripts/check-chars.py <ไฟล์>
+        ↓ เจออักษร จีน/ญี่ปุ่น/เกาหลี/รัสเซีย/อาหรับ
+แนบคำเตือน (เลขบรรทัด + code point) เข้า tool output → agent ต้องแก้ก่อนจบงาน
+```
+
+- **ค่าเริ่มต้น `warn`** — เตือน ไม่บล็อก เพราะ false positive มีจริง (บทความภาษาจีน, ชื่อเรื่องต่างภาษา)
+- อยากเข้ม: ตั้ง `"plugins": [{ "package": "./plugins/charcheck", "options": { "mode": "block" } }]` ใน `opencode.jsonc` (หรือ `"off"` เพื่อปิด)
+- สัญลักษณ์กรีก (`ψ` `Δ` `α`) ถูก allowlist ไว้ — เป็นสัญลักษณ์คณิตศาสตร์ ไม่ใช่การหลุด
+- `install` พา `plugins/*/index.ts` + `scripts/*.py` ไปด้วย (เฉพาะ full kit — `--agent`/`--team` ไม่พา plugin เพราะเป็น host-level)

@@ -15,7 +15,9 @@ type Kit struct {
 	Skills    []string // repo-relative paths, e.g. skills/aiy-messaging/SKILL.md
 	Templates []string
 	Playbooks []string
-	Rev       string // source git revision at discovery time
+	Plugins   []string // repo-relative paths, e.g. plugins/charcheck/index.ts
+	Tools     []string // repo-relative python helpers, e.g. scripts/check-chars.py
+	Rev       string   // source git revision at discovery time
 }
 
 // Selector narrows a bundle (CLI_SPEC.md §1.1). Mutual exclusion of Agent and
@@ -41,6 +43,16 @@ func Discover(repoRoot string) (*Kit, error) {
 	if k.Playbooks, err = globRel(repoRoot, "playbooks", "*.md"); err != nil {
 		return nil, err
 	}
+	// Plugins are host-level (loaded from <config>/plugins/), so they ship with
+	// the full kit only — an --agent/--team selector does not carry them.
+	if k.Plugins, err = globRel(repoRoot, "plugins", "*", "index.ts"); err != nil {
+		return nil, err
+	}
+	// Python helpers the agents invoke by path (e.g. check-chars.py). Bash
+	// tooling under scripts/<area>/ stays host-side and is not shipped.
+	if k.Tools, err = globRel(repoRoot, "scripts", "*.py"); err != nil {
+		return nil, err
+	}
 	if len(k.Agents) == 0 {
 		return nil, fmt.Errorf("%s: no agents found — not a warp kit?", repoRoot)
 	}
@@ -52,8 +64,11 @@ func Discover(repoRoot string) (*Kit, error) {
 
 // All returns every payload file, sorted.
 func (k *Kit) All() []string {
-	return sortedUnique(append(append(append([]string{}, k.Agents...), k.Skills...),
-		append(k.Templates, k.Playbooks...)...))
+	files := append(append(append([]string{}, k.Agents...), k.Skills...), k.Templates...)
+	files = append(files, k.Playbooks...)
+	files = append(files, k.Plugins...)
+	files = append(files, k.Tools...)
+	return sortedUnique(files)
 }
 
 // Resolve maps a selector to a sorted bundle file set. The empty selector is
