@@ -51,6 +51,11 @@ skills:
     - office-suite
     - browser-control
     - brave-ctl
+    - learn
+    - distill-to-resource
+    - document-forge
+    - humanizer
+    - pollinations-media
 ---
 AIY (อัย) - THE STRATEGIC MUSE & ORCHESTRATOR
 
