@@ -350,6 +350,7 @@ def report(args, *, model, path, blob, headers, kind, extra=None):
 def cmd_image(args):
     key = require_key(args.key)
     model = args.model or load_config().get("default_model") or DEFAULT_IMAGE_MODEL
+    guard_free(model, "image", args)
     w, h = size_args(args)
     payload = {
         "model": model,
@@ -382,6 +383,7 @@ def cmd_edit(args):
     """
     key = require_key(args.key)
     model = args.model or DEFAULT_EDIT_MODEL
+    guard_free(model, "image", args)
     images = [
         data_uri(p) if not str(p).startswith(("http", "data:")) else p for p in args.image
     ]
@@ -448,6 +450,7 @@ def binary_get(url, key, kind, timeout=900):
 def cmd_video(args):
     key = require_key(args.key)
     model = args.model or DEFAULT_VIDEO_MODEL
+    guard_free(model, "video", args)
     params = {"model": model}
     if args.duration:
         params["duration"] = args.duration
@@ -480,6 +483,7 @@ def cmd_video(args):
 def cmd_3d(args):
     key = require_key(args.key)
     model = args.model or DEFAULT_3D_MODEL
+    guard_free(model, "3d", args)
     params = {"model": model}
     if args.resolution:
         params["resolution"] = args.resolution
@@ -502,6 +506,7 @@ def cmd_3d(args):
 def cmd_speech(args):
     key = require_key(args.key)
     model = args.model or DEFAULT_SPEECH_MODEL
+    guard_free(model, "audio", args)
     payload = {
         "model": model,
         "input": args.text,
@@ -536,6 +541,7 @@ def cmd_speech(args):
 def cmd_music(args):
     key = require_key(args.key)
     model = args.model or DEFAULT_MUSIC_MODEL
+    guard_free(model, "audio", args)
     params = {"model": model}
     if args.duration:
         params["duration"] = args.duration
@@ -649,6 +655,29 @@ def fetch_models(kind, key):
         _, _, body = _request(f"{BASE}{endpoint}", headers=headers, timeout=90)
         models = json.loads(body.decode("utf-8", "replace"))
     return [m for m in models if m.get("category") == kind]
+
+
+_TIER_CACHE = {}
+
+
+def model_is_paid(model, kind):
+    """True when the model needs a paid top-up. Unknown/offline → False (never block a run)."""
+    if kind not in _TIER_CACHE:
+        try:
+            _TIER_CACHE[kind] = {m["name"]: bool(m.get("paid_only")) for m in fetch_models(kind, "")}
+        except Exception:
+            _TIER_CACHE[kind] = {}
+    return _TIER_CACHE[kind].get(model, False)
+
+
+def guard_free(model, kind, args):
+    """--free: refuse paid models before spending a request (default posture for this account)."""
+    if getattr(args, "free", False) and model_is_paid(model, kind):
+        die(
+            f"{model} ต้องใช้ paid balance — โหมด --free ปฏิเสธก่อนยิง\n"
+            f"  ใช้ตัวฟรีแทน: python3 $M models -t {kind} --quest\n"
+            f"  (ถ้าจำเป็นต้องใช้จริง: เอา --free ออก แล้วบอกหลุยส์ว่าราคาเท่าไร)"
+        )
 
 
 def cmd_probe(args):
@@ -790,12 +819,16 @@ def build_parser():
     )
     ap.add_argument("--key", help="API key (default: env POLLINATIONS_API_KEY or config file)")
     ap.add_argument("--json", action="store_true", help="machine-readable result")
+    ap.add_argument("--free", action="store_true",
+                    help="ปฏิเสธ model ที่ต้อง paid balance ก่อนยิง (โหมดประหยัดของบัญชีนี้)")
     sub = ap.add_subparsers(dest="cmd", required=True)
 
     def add_json(p):
-        """Allow --json after the subcommand too (SUPPRESS keeps the global default)."""
+        """Allow --json / --free after the subcommand too (SUPPRESS keeps the global default)."""
         p.add_argument("--json", action="store_true", default=argparse.SUPPRESS,
                        help="machine-readable result")
+        p.add_argument("--free", action="store_true", default=argparse.SUPPRESS,
+                       help="ปฏิเสธ model ที่ต้อง paid balance ก่อนยิง")
 
     def add_common(p, size=True):
         p.add_argument("--model", "-m")

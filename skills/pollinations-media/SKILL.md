@@ -45,6 +45,19 @@ python3 $M image "a bowl of ramen, steam rising, moody side light, 50mm" -a 4:3
 - ตารางนี้อัปเดตได้เองจาก field `paid_only` ใน API: `python3 $M models -t image --quest` (ไม่ต้องยิงทดสอบ ไม่เสียเงิน) · `probe -n 12` ใช้เมื่อสงสัยว่าตารางล้าสมัย (ตัวที่พังไม่เสียเงิน)
 - เจอ `402` อย่าถือว่าบั๊ก: เปลี่ยนไปตัวที่อยู่ในคอลัมน์ซ้าย หรือบอกหลุยส์ว่า "งานนี้ต้องเติม paid balance ~$X"
 
+### 🆓 นโยบายของหลุยส์: "เน้นฟรีไว้ก่อน" (19-Nov-26)
+
+**ทุกคำสั่งรันด้วย `--free` เป็นค่าเริ่มต้นของงานปกติ** — CLI จะเช็ค `paid_only` ก่อนยิง และปฏิเสธทันทีถ้า model ต้องเติมเงิน (ไม่เสีย request ไม่ต้องรอ 402)
+
+```bash
+python3 $M image "prompt" --free            # ✅ ผ่านถ้าเป็น Quest
+python3 $M image "prompt" --free -m openai/gpt-image-1-mini
+# ✖ ปฏิเสธก่อนยิง + บอกทางเลือกรุ่นฟรี
+```
+
+- จะใช้ model paid ต้อง**เอา `--free` ออกโดยเจตนา** + บอกราคาหลุยส์ก่อน
+- งานที่ต้องใช้ของแพงจริง ๆ (ตัวหนังสือในภาพ, วิดีโอ, เพลง, 3D) → ถามก่อนทุกครั้ง ไม่เดา
+
 ## 🧠 เลือก model ให้ตรงงาน
 
 | งาน | ใช้ | หมายเหตุ |
@@ -80,8 +93,8 @@ python3 $M image "a bowl of ramen, steam rising, moody side light, 50mm" -a 4:3
 
 ```bash
 # ภาพ
-python3 $M image "prompt" -a 16:9 --model black-forest-labs/flux.1.1-pro --seed 7
-python3 $M image "prompt" -s 1280x720 --transparent --quality hd --safe privacy
+python3 $M image "prompt" -a 16:9 --model black-forest-labs/flux.1.1-pro --seed 7 --free
+python3 $M image "prompt" -s 1280x720 --transparent --quality hd --safe privacy --free
 # แก้/แต่งภาพ (img2img — รับไฟล์ในเครื่องหรือ URL, หลายไฟล์ได้)
 python3 $M edit "same cup, golden hour, warm amber tones" -i base.jpg
 python3 $M edit "place this mug on a wooden desk, product photo" -i mug.png -i desk.jpg
@@ -128,6 +141,7 @@ python3 $M balance ; python3 $M doctor
 
 ## 💰 วินัยต้นทุน
 
+0. **`--free` เป็นค่าตั้งต้นของทุกงานปกติ** — งานศิลป์/ภาพประกอบ/เสียงพูด ไม่มีเหตุผลต้องจ่าย · ใช้ของแพงเฉพาะเมื่อฟรีทำไม่ได้จริงและหลุยส์อนุมัติแล้ว
 1. ร่างถูกก่อนเสมอ (schnell) → พอใจแล้วค่อยเรนเดอร์ `flux.1.1-pro`
 2. วิดีโอ/เพลง/3D = paid: **คำนวณก่อนยิง** (ราคา/วินาที × จำนวนวินาที) และบอกหลุยส์ทุกครั้ง
 3. ก่อนสร้างใหม่ ให้ `ls -t ~/00-Inbox/Aiy/{images,videos,audio}` ดูของเก่าก่อน
