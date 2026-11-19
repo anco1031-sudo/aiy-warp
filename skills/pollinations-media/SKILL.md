@@ -45,9 +45,24 @@ python3 $M image "a bowl of ramen, steam rising, moody side light, 50mm" -a 4:3
 - ตารางนี้อัปเดตได้เองจาก field `paid_only` ใน API: `python3 $M models -t image --quest` (ไม่ต้องยิงทดสอบ ไม่เสียเงิน) · `probe -n 12` ใช้เมื่อสงสัยว่าตารางล้าสมัย (ตัวที่พังไม่เสียเงิน)
 - เจอ `402` อย่าถือว่าบั๊ก: เปลี่ยนไปตัวที่อยู่ในคอลัมน์ซ้าย หรือบอกหลุยส์ว่า "งานนี้ต้องเติม paid balance ~$X"
 
-### 🆓 นโยบายของหลุยส์: "เน้นฟรีไว้ก่อน" (19-Nov-26)
+### 🧾 Pollen ไม่ unlimited — โควต้าคืออะไร (ตรวจจริง 19-Nov-26)
 
-**ทุกคำสั่งรันด้วย `--free` เป็นค่าเริ่มต้นของงานปกติ** — CLI จะเช็ค `paid_only` ก่อนยิง และปฏิเสธทันทีถ้า model ต้องเติมเงิน (ไม่เสีย request ไม่ต้องรอ 402)
+`pollen` = หน่วยเงินของ Pollinations · บัญชีมี **2 bucket** (ยืนยันจาก OpenAPI: `accountBalance: {total, tier, paid}`)
+
+| bucket | ที่มา | ใช้กับ |
+|---|---|---|
+| **`tier`** (Quest/ฟรี) | เควสต์ (`/quests/catalog`) — เช่น `first_api_key` +$0.25 · `use_video_model` +$1 · `invite_friends` +$2 · `merged_pr` +$5 | model ที่ `paid_only: false` |
+| **`paid`** | เติมเงิน (`/top-up`) | model ที่ `paid_only: true` (วิดีโอ/เพลง/3D/nano-banana/gpt-image) |
+
+- **ฟรี ≠ ไม่จำกัด** — บัญชีนี้เริ่มด้วย ~$0.25 จากเควสต์ และใช้หมดไปแล้วในวันเดียว (27 คำขอ = $0.2502 · `flux.1.1-pro` กินไป $0.12 คนเดียว)
+- ดูยอดใช้จริงได้เสมอ: `python3 $M usage` (อ่าน `/account/key/usage` — ไม่ต้องมีสิทธิ์พิเศษ)
+- **ยอดคงเหลือ** ต้องมีสิทธิ์ `account:usage` → `python3 $M balance` · ถ้ายังไม่ให้สิทธิ์ ให้อ่านตัวเลขจากข้อความ `402` แทน (มันบอก "available balance" ตรง ๆ)
+- เติมฟรีเพิ่ม: ทำเควสต์ที่ `https://enter.pollinations.ai/quests` (API อ่านรายการได้ที่ `/quests/catalog` แต่ **กดรับต้องทำในหน้าเว็บ**)
+- เควสต์ที่ได้เงินแต่ยังไม่รับ และทำได้เลย: `use_image_model` / `use_text_model` / `use_audio_model` (+$0.25 each) · `join_discord` (+$1) · `use_video_model` (+$1 — ต้องมี paid ก่อน) · `invite_friends` (+$2) · `reported_merged_issue` (+$2)
+
+**ประมาณการราคาต่อภาพ ( Quest):** `flux.1-schnell` $0.002 · `z-image-turbo` $0.004 · `flux.2-klein-4b` $0.005 · `flux.1.1-pro` $0.030 → **งบ $0.25 = schnell ~125 ภาพ หรือ flux.1.1-pro แค่ ~8 ภาพ**
+
+### 🆓 นโยบายของหลุยส์: "เน้นฟรีไว้ก่อน" (19-Nov-26)**ทุกคำสั่งรันด้วย `--free` เป็นค่าเริ่มต้นของงานปกติ** — CLI จะเช็ค `paid_only` ก่อนยิง และปฏิเสธทันทีถ้า model ต้องเติมเงิน (ไม่เสีย request ไม่ต้องรอ 402)
 
 ```bash
 python3 $M image "prompt" --free            # ✅ ผ่านถ้าเป็น Quest
@@ -114,6 +129,7 @@ python3 $M models -t audio --voices          # รายชื่อเสีย
 python3 $M models -t video -q veo --json
 python3 $M probe -n 12                       # ยิงทดสอบจริงว่า key ใช้ model ไหนได้
 python3 $M balance ; python3 $M doctor
+python3 $M usage                             # ใช้ pollen ไปเท่าไร แยกตามวัน/model
 ```
 
 ทุกคำสั่งรับ `--json` (ผลลัพธ์เครื่องอ่าน) และ `-o <ไฟล์/โฟลเดอร์>`

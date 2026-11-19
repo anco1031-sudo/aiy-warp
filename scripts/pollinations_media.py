@@ -769,8 +769,59 @@ def cmd_balance(args):
     try:
         _, _, body = _request(f"{BASE}/account/balance", headers=auth_headers(key), timeout=30)
     except urllib.error.HTTPError as exc:
-        die(api_error_message(exc))
+        die(
+            api_error_message(exc)
+            + "\n  → key ยังไม่มีสิทธิ์ account:usage · เปิดที่ "
+              "https://enter.pollinations.ai/grant?id=dX0iiIfxsx81OHLGw0BKe4bduVajsrmd&permission=usage\n"
+              "  → ระหว่างนี้ดูยอดใช้จริงได้ด้วย: python3 $M usage"
+        )
     print(json.dumps(json.loads(body.decode()), indent=2))
+
+
+def cmd_usage(args):
+    """Spend history for this key — the only quota signal that works without extra permissions.
+
+    Pollen is NOT unlimited: free requests draw from the `tier` bucket (earned via quests),
+    premium models need the `paid` bucket. Each row here is one billed request.
+    """
+    key = require_key(args.key)
+    try:
+        _, _, body = _request(f"{BASE}/account/key/usage", headers=auth_headers(key), timeout=30)
+    except urllib.error.HTTPError as exc:
+        die(api_error_message(exc))
+    rows = json.loads(body.decode("utf-8", "replace")).get("usage") or []
+
+    if args.json:
+        print(json.dumps(rows, indent=2))
+        return
+    if not rows:
+        print("ยังไม่มีประวัติการใช้ (no usage yet)")
+        return
+
+    by_day, by_model, by_bucket = {}, {}, {}
+    for r in rows:
+        day = (r.get("timestamp") or "")[:10]
+        cost = float(r.get("cost_usd") or 0)
+        by_day[day] = by_day.get(day, 0) + cost
+        label = f"{r.get('type', '?')} · {r.get('model') or '-'}"
+        by_model[label] = by_model.get(label, 0) + cost
+        b = r.get("meter_source") or "?"
+        by_bucket[b] = by_bucket.get(b, 0) + cost
+
+    total = sum(by_day.values())
+    print(f"{len(rows)} requests · ใช้ไป ${total:.4f} pollen")
+    print("bucket:", ", ".join(f"{k}=${v:.4f}" for k, v in by_bucket.items()))
+    print("\nตามวัน (ใหม่ → เก่า):")
+    for day in sorted(by_day, reverse=True)[: args.days]:
+        n = sum(1 for r in rows if (r.get("timestamp") or "").startswith(day))
+        print(f"  {day}  {n:3d} req  ${by_day[day]:.4f}")
+    print("\nตาม model (มาก → น้อย):")
+    for label, cost in sorted(by_model.items(), key=lambda kv: -kv[1])[: args.limit]:
+        print(f"  ${cost:.4f}  {label}")
+    print(
+        "\n⚠️ ยอดคงเหลือที่เหลือจริงต้องใช้สิทธิ์ account:usage "
+        "(`$M balance`) — ถ้าไม่ให้สิทธิ์ ให้ดูตัวเลขจากข้อความ 402 แทน"
+    )
 
 
 def cmd_doctor(args):
@@ -923,8 +974,13 @@ def build_parser():
     p.add_argument("--size", "-s", default="512x512")
     p.set_defaults(func=cmd_probe)
 
-    b = sub.add_parser("balance", help="show remaining balance")
+    b = sub.add_parser("balance", help="show remaining balance (needs account:usage grant)")
     b.set_defaults(func=cmd_balance)
+
+    u = sub.add_parser("usage", help="spend history — ดูว่าใช้ pollen ไปเท่าไร")
+    u.add_argument("--days", type=int, default=7)
+    u.add_argument("--limit", "-n", type=int, default=8)
+    u.set_defaults(func=cmd_usage)
 
     d = sub.add_parser("doctor", help="check key, permissions, folders, connectivity")
     d.set_defaults(func=cmd_doctor)
